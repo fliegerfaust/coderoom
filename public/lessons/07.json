@@ -1,0 +1,109 @@
+{
+ "id": "07",
+ "short": "Занятие 07",
+ "title": "Занятие 07 · А7 Списки, split, map и set",
+ "groups": [
+  {
+   "id": "class-py",
+   "title": "На занятии · Python А7",
+   "tasks": [
+    {
+     "id": "c-a7-1",
+     "label": "А7 · 1",
+     "kind": "predict",
+     "topic": "Предскажи вывод",
+     "level": 1,
+     "statement": "Что напечатает программа? Сначала запиши ответ, потом запусти.\n\n```python\na = [5, 2, 9]\na.append(1)\nprint(len(a), sum(a), max(a))\n```",
+     "starter": "a = [5, 2, 9]\na.append(1)\nprint(len(a), sum(a), max(a))\n"
+    },
+    {
+     "id": "c-a7-2",
+     "label": "А7 · 2",
+     "kind": "predict",
+     "topic": "Предскажи вывод",
+     "level": 1,
+     "statement": "Что напечатает программа? Сначала запиши ответ, потом запусти.\n\n```python\nprint(sorted('КОД'))\n```",
+     "starter": "print(sorted('КОД'))\n"
+    },
+    {
+     "id": "c-a7-3",
+     "label": "А7 · 3",
+     "kind": "predict",
+     "topic": "Предскажи вывод",
+     "level": 1,
+     "statement": "Что напечатает программа? Сначала запиши ответ, потом запусти.\n\n```python\nprint('192.168.1.10'.split('.'))\n```",
+     "starter": "print('192.168.1.10'.split('.'))\n"
+    },
+    {
+     "id": "c-a7-4",
+     "label": "А7 · 4",
+     "kind": "predict",
+     "topic": "Предскажи вывод",
+     "level": 1,
+     "statement": "Что напечатает программа? Сначала запиши ответ, потом запусти.\n\n```python\nprint(len(set('ПАПА')), len(set('ЛОТУ')))\n```",
+     "starter": "print(len(set('ПАПА')), len(set('ЛОТУ')))\n"
+    },
+    {
+     "id": "c-a7-5",
+     "label": "А7 · 5",
+     "kind": "bug",
+     "topic": "Найди ошибку",
+     "level": 1,
+     "statement": "Хотели сложить числа из IP-адреса — ошибка. Почему?\n\n```python\nprint(sum('10.172.93.200'.split('.')))\n```",
+     "starter": "print(sum('10.172.93.200'.split('.')))\n"
+    },
+    {
+     "id": "c-a7-6",
+     "label": "А7 · 6",
+     "kind": "make",
+     "topic": "Напиши сам",
+     "level": 1,
+     "statement": "Адрес сети 192.168.156.0 — посчитай сумму октетов одной строкой (ответ №10 в формате 2027).",
+     "starter": "print(sum(map(___, '192.168.156.0'.___('.'))))\n"
+    }
+   ]
+  },
+  {
+   "id": "home-py",
+   "title": "Дома · Python А7",
+   "tasks": [
+    {
+     "id": "h-a7-1",
+     "label": "А7 · 1",
+     "kind": "predict",
+     "topic": "Предскажи вывод",
+     "level": 1,
+     "statement": "Что напечатает программа? Сначала запиши ответ, потом запусти.\n\n```python\na = [3, 1, 2]\nprint(sorted(a), a)\n```",
+     "starter": "a = [3, 1, 2]\nprint(sorted(a), a)\n"
+    },
+    {
+     "id": "h-a7-2",
+     "label": "А7 · 2",
+     "kind": "predict",
+     "topic": "Предскажи вывод",
+     "level": 1,
+     "statement": "Что напечатает программа? Сначала запиши ответ, потом запусти.\n\n```python\nprint('a-b-c'.split('-'))\n```",
+     "starter": "print('a-b-c'.split('-'))\n"
+    },
+    {
+     "id": "h-a7-3",
+     "label": "А7 · 3",
+     "kind": "make",
+     "topic": "Напиши сам",
+     "level": 1,
+     "statement": "Сумма октетов адреса 172.16.254.1 одной строкой.",
+     "starter": "\n"
+    },
+    {
+     "id": "h-a7-4",
+     "label": "А7 · 4",
+     "kind": "make",
+     "topic": "Напиши сам",
+     "level": 1,
+     "statement": "Сколько разных букв в слове ПРОГРАММИРОВАНИЕ?",
+     "starter": "\n"
+    }
+   ]
+  }
+ ]
+}
