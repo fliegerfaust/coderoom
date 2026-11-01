@@ -123,6 +123,20 @@ test('живой Firebase: два компьютера, одновременны
   await expect(t.locator('.outbody')).toContainText('380', { timeout: 60_000 });
   await expect(t.locator('[data-el="runInfo"]')).toContainText('Аршак-тест');
 
+  // 9. «Стереть всё»: у обоих чистая комната, правки снова ходят
+  await t.locator('.lessonbtn').click();
+  await t.getByRole('button', { name: 'Стереть всё…' }).click();
+  await t.getByRole('button', { name: 'Стереть всё', exact: true }).click();
+  for (const p of [t, s]) {
+    await expect(p.locator('.badge')).toHaveText('А1 · 1'); // после стирания — первая задача занятия
+    await expect.poll(() => lines(p)).not.toContain('172 + 16');
+    await expect(p.locator('.chip.ran')).toHaveCount(0);
+  }
+  await toEnd(s); await s.keyboard.type('\nafter_reset = 1');
+  await expect.poll(() => lines(t)).toContain('after_reset = 1');
+  const left = Object.keys((await (await fetch(`${DB}/${base}.json?shallow=true`)).json()) ?? {});
+  log.push(`после стирания в комнате осталось: ${left.join(', ')}`);
+
   console.log(log.join('\n'));
   // уборка: тестовая комната удаляется из базы
   await fetch(`${DB}/${base}.json`, { method: 'DELETE' });
