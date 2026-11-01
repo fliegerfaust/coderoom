@@ -140,3 +140,50 @@ test('преподаватель меняет занятие и стирает �
   await s.keyboard.type('\nx = 42');
   await expect(t.locator('.cm-content')).toContainText('x = 42');
 });
+
+test('ученик видит только открытые задачи; «Пригласить» у преподавателя показывает ссылку и PIN', async ({ context }) => {
+  const t = await context.newPage();
+  await t.goto('./?db=local');
+  await t.getByLabel('Твоё имя в комнате').fill('Денис');
+  await t.getByRole('button', { name: 'Создать комнату' }).click();
+  const pin = (await t.locator('.pinbig').textContent())!.trim();
+  const link = (await t.locator('[data-link]').textContent())!.trim();
+  await t.getByRole('button', { name: 'Готово' }).click();
+  await expect(t.locator('.share-pop')).toHaveCount(0);
+
+  // «Пригласить» в любой момент: та же ссылка и тот же PIN
+  await t.getByRole('button', { name: 'Пригласить' }).click();
+  await expect(t.locator('.share-pop .pinbig')).toHaveText(pin);
+  await expect(t.locator('.share-pop [data-link]')).toHaveText(link);
+  await t.keyboard.press('Escape');
+  await expect(t.locator('.share-pop')).toHaveCount(0);
+
+  const s = await context.newPage();
+  await s.addInitScript(() => { try { if (!sessionStorage.getItem('e2e')) { sessionStorage.setItem('e2e', '1'); localStorage.removeItem('coderoom-me'); localStorage.removeItem('coderoom-rooms'); } } catch { /* */ } });
+  await s.goto('./?db=local#' + link.split('#')[1]);
+  await s.getByLabel('Как тебя зовут').fill('Аршак');
+  await s.getByLabel('PIN комнаты').fill(pin);
+  await s.getByRole('button', { name: 'Войти' }).click();
+  await expect(s.locator('.badge')).toHaveText('А1 · 1');
+
+  // у ученика: ни меню занятий, ни «Пригласить»; видна только открытая задача
+  await expect(s.locator('.lessonbtn')).toHaveCount(0);
+  await expect(s.getByRole('button', { name: 'Пригласить' })).toHaveCount(0);
+  await expect(s.locator('.stack .chip')).toHaveCount(1);
+  await expect(s.locator('.cardfoot button').last()).toBeDisabled();
+  // у преподавателя — все 8 задач стопки
+  await expect(t.locator('.stack .chip')).toHaveCount(8);
+
+  // преподаватель открывает А1 · 3 — у ученика две задачи, вперёд по-прежнему нельзя
+  await t.locator('.stack [data-task="c-a1-3"]').click();
+  await expect(s.locator('.badge')).toHaveText('А1 · 3');
+  await expect(s.locator('.stack .chip')).toHaveCount(2);
+  await s.getByRole('button', { name: 'Открытые задачи' }).click();
+  await expect(s.locator('.tasklist .chip')).toHaveCount(3); // А1·1, А1·3 и «Чистый лист»
+  await expect(s.locator('.tasklist')).not.toContainText('№10');
+  await s.keyboard.press('Escape');
+
+  // ученик может вернуться к уже открытой задаче
+  await s.locator('.stack [data-task="c-a1-1"]').click();
+  await expect(t.locator('.badge')).toHaveText('А1 · 1');
+});

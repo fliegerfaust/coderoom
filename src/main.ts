@@ -7,7 +7,7 @@ import { Room } from './room/room';
 import { loadMe, roomFromHash, roomPath, saveMe, saveRoom, savedRoom, forgetRoom } from './room/access';
 import { loadIndex, loadLesson } from './lessons/types';
 import { RoomView } from './ui/room-view';
-import { homeView, joinForm, sharePanel, type EntryResult } from './ui/entry-view';
+import { homeView, joinForm, type EntryResult } from './ui/entry-view';
 import { h } from './ui/dom';
 
 const app = document.getElementById('app')!;
@@ -51,16 +51,11 @@ async function openRoom(db: Db, base: string, me: ReturnType<typeof saveMe>, tea
   // «Стереть всё» у кого угодно — у всех открывается чистая комната того же адреса
   room.onReset(() => location.reload());
   const lessons = await loadIndex(BASE);
-  view = new RoomView(room, lessons, (i) => loadLesson(i, BASE));
+  const inv = teacher ? { room: roomFromHash() ?? created?.room ?? '', pin: created?.pin ?? savedRoom(roomFromHash() ?? '')?.pin ?? '' } : null;
+  view = new RoomView(room, lessons, (i) => loadLesson(i, BASE), inv && inv.room && inv.pin ? inv : null);
   app.replaceChildren(view.root);
   await view.start();
-  if (created) {
-    const panel = sharePanel(created.room, created.pin);
-    const wrap = h('<div class="share-pop" role="dialog" aria-label="Ссылка для ученика"><button class="btn ghost" type="button" data-close>Готово</button></div>');
-    wrap.prepend(panel);
-    wrap.querySelector('[data-close]')!.addEventListener('click', () => wrap.remove());
-    view.root.append(wrap);
-  }
+  if (created) view.openInvite();
   if (db.kind === 'local') console.info('Кодовая комната: локальный режим (без Firebase), синхронизация только между вкладками этого браузера');
 }
 
