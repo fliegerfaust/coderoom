@@ -35,6 +35,8 @@ export class Room {
   /** clientID → автор: для полоски авторства строк */
   readonly clients = this.doc.getMap<{ name: string; color: string }>('clients');
   private inited = this.doc.getMap<boolean>('inited');
+  /** Задачи, которые уже открывали в комнате: только их видит ученик (ST.2) */
+  readonly opened = this.doc.getMap<boolean>('opened');
   private sync: YSync | null = null;
   /** Поколение комнаты: «Стереть всё» начинает новое, старые данные удаляются */
   gen = 0;
@@ -91,6 +93,8 @@ export class Room {
       if (lessonId && this.meta.get('lesson') !== lessonId) this.meta.set('lesson', lessonId);
       this.meta.set('task', task.id);
       const key = Room.key(lessonId, task.id);
+      // открытые задачи видит ученик; вперёд он не заглядывает
+      if (!this.opened.get(key)) this.opened.set(key, true);
       const text = this.code(key);
       if (!this.inited.get(key)) {
         if (text.length === 0 && task.starter) text.insert(0, task.starter);
