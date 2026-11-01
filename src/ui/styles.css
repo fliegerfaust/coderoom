@@ -223,3 +223,31 @@ input, textarea { font: inherit; color: inherit; }
 .stdin label { white-space: nowrap; }
 .stdin textarea { min-height: 36px; height: 36px; padding: 6px 10px; }
 @media (max-width: 1100px) { .stdin { grid-template-columns: 1fr; } }
+
+/* ── занятие в шапке: переключатель и «Начать заново» (LS.4, RM.4) ── */
+.lessonnav { position: relative; min-width: 0; display: flex; }
+.lessonbtn { max-width: min(560px, 46vw); gap: 6px; padding: 0 10px; margin-left: -10px; }
+.lessonbtn .lesson-name { min-width: 0; }
+.lessonbtn svg { width: 14px; height: 14px; color: var(--ink-3); transition: transform .2s; }
+.lessonbtn[aria-expanded="true"] svg { transform: rotate(180deg); }
+.lessonmenu { position: absolute; z-index: 35; top: calc(100% + 10px); left: -10px; width: min(460px, 92vw);
+  background: var(--paper); border: 1px solid var(--line); border-radius: 14px; box-shadow: 0 24px 48px -24px rgba(20,20,20,.45);
+  padding: 10px; display: grid; gap: 6px; }
+.lessonmenu h4 { margin: 8px 8px 2px; font: 800 12px var(--f-ui); color: var(--ink-3); letter-spacing: .04em; text-transform: uppercase; }
+.lessonlist { display: grid; gap: 2px; max-height: min(52vh, 420px); overflow: auto; }
+.lessonrow { display: grid; grid-template-columns: 96px minmax(0, 1fr); gap: 10px; align-items: baseline; text-align: left;
+  border: 0; background: transparent; border-radius: 8px; padding: 8px; font-size: 14px; color: var(--ink-2); }
+.lessonrow b { font-weight: 800; color: var(--ink); white-space: nowrap; }
+.lessonrow span { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.lessonrow:hover { background: var(--ground); }
+.lessonrow.on { background: var(--ink); color: color-mix(in srgb, var(--paper) 78%, transparent); }
+.lessonrow.on b { color: var(--lime); }
+.danger-zone { margin-top: 6px; border-top: 1px solid var(--line); padding: 12px 8px 4px; display: flex; gap: 14px; align-items: center; justify-content: space-between; }
+.danger-zone div { display: grid; gap: 2px; min-width: 0; }
+.danger-zone b { font-size: 14px; font-weight: 800; }
+.danger-zone span { font-size: 13px; color: var(--ink-3); line-height: 1.45; }
+.btn.danger { border-color: color-mix(in srgb, var(--danger) 55%, var(--line)); color: var(--danger); }
+.btn.danger:hover { background: var(--danger-soft); border-color: var(--danger); }
+.confirm-t { margin: 0 8px; font-size: 15px; line-height: 1.5; color: var(--ink-2); max-width: 52ch; }
+.confirm-row { display: flex; justify-content: flex-end; gap: 8px; padding: 8px; }
+@media (max-width: 760px) { .lessonnav { display: none; } }
