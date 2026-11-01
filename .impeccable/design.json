@@ -1,0 +1,162 @@
+{
+  "schemaVersion": 2,
+  "generatedAt": "2026-11-01T12:00:00Z",
+  "title": "Design System: Кодовая комната",
+  "extensions": {
+    "colorMeta": {
+      "violet": { "role": "primary", "displayName": "Фиолет ДенВал", "canonical": "#7C3AED", "dark": "#8B5CF6", "tonalRamp": ["#2A0F5C", "#3F1A85", "#5524B8", "#7C3AED", "#9A6BF2", "#B89AF6", "#D6C6FA", "#EFE7FD"] },
+      "violet-soft": { "role": "primary", "displayName": "Фиолет мягкий", "canonical": "#EFE7FD", "dark": "#2D2343" },
+      "lime": { "role": "secondary", "displayName": "Лайм-маркер", "canonical": "#CDEB00", "tonalRamp": ["#3A4300", "#566300", "#788A00", "#A3BC00", "#CDEB00", "#DDF24D", "#EAF78F", "#F6FBCC"] },
+      "teacher": { "role": "tertiary", "displayName": "Цвет преподавателя", "canonical": "#7C3AED", "dark": "#A98BFF" },
+      "student": { "role": "tertiary", "displayName": "Цвет ученика", "canonical": "#0F8A5F", "dark": "#3CC48D", "tonalRamp": ["#05301F", "#08482F", "#0B6343", "#0F8A5F", "#3CA77F", "#74C3A4", "#AEDDCA", "#DDF3EA"] },
+      "student-soft": { "role": "tertiary", "displayName": "Ученик мягкий", "canonical": "#DDF3EA", "dark": "#173A2C" },
+      "danger": { "role": "tertiary", "displayName": "Ошибка", "canonical": "#C2410C", "dark": "#FB8A5C", "tonalRamp": ["#431604", "#6A2307", "#96310A", "#C2410C", "#DD6A3B", "#EC9874", "#F6C6B1", "#FDEDE4"] },
+      "danger-soft": { "role": "tertiary", "displayName": "Ошибка мягкая", "canonical": "#FDEDE4", "dark": "#3A2117" },
+      "warn": { "role": "tertiary", "displayName": "Предупреждение", "canonical": "#A16207", "dark": "#E5B649" },
+      "ground": { "role": "neutral", "displayName": "Тёплый фон", "canonical": "#F6F5F4", "dark": "#181716" },
+      "paper": { "role": "neutral", "displayName": "Бумага", "canonical": "#FFFFFF", "dark": "#211F1D" },
+      "ink": { "role": "neutral", "displayName": "Чернила", "canonical": "#141414", "dark": "#F3F1EE", "tonalRamp": ["#141414", "#2A2826", "#4A4743", "#7D7872", "#A9A49E", "#E4E1DD", "#F3F1EE", "#F6F5F4"] },
+      "ink-2": { "role": "neutral", "displayName": "Чернила-2", "canonical": "#4A4743", "dark": "#C9C4BD" },
+      "ink-3": { "role": "neutral", "displayName": "Чернила-3", "canonical": "#7D7872", "dark": "#9A948C" },
+      "line": { "role": "neutral", "displayName": "Линия", "canonical": "#E4E1DD", "dark": "#34312E" },
+      "out-bg": { "role": "neutral", "displayName": "Фон вывода", "canonical": "#FBFAF8", "dark": "#1B1A18" },
+      "code-bg": { "role": "neutral", "displayName": "Фон кода", "canonical": "#F3F1EE", "dark": "#2A2826" }
+    },
+    "syntax": {
+      "note": "Подсветка Python в редакторе (CSS-переменные --syn-*). Цвет чисел оранжевый и спорит с правилом красного для ошибок; вопрос открыт, в систему не канонизирован.",
+      "light": { "keyword": "#7C3AED", "string": "#0F7B56", "number": "#B4470C", "comment": "#8A857F", "fn": "#1C5FB8", "builtin": "#1C5FB8", "def": "#141414", "op": "#4A4743", "punct": "#4A4743" },
+      "dark": { "keyword": "#B79CFF", "string": "#5FD3A1", "number": "#F0A15E", "comment": "#8E8880", "fn": "#7FB2FF", "builtin": "#7FB2FF", "def": "#F3F1EE", "op": "#C9C4BD", "punct": "#C9C4BD" }
+    },
+    "themes": {
+      "dark": "Тёмная тема включается по prefers-color-scheme или data-theme=\"dark\"; значения ролей — в поле dark у colorMeta. Бейдж и логотип остаются чернила + лайм в обеих темах."
+    },
+    "typographyMeta": {
+      "headline": { "displayName": "Заголовок", "purpose": "Заголовок карточки входа, с лаймовым маркером на ключевом слове." },
+      "logo": { "displayName": "Логотип", "purpose": "Название продукта в шапке и на входе." },
+      "statement": { "displayName": "Условие", "purpose": "Условие задачи в карточке, до 66ch." },
+      "body": { "displayName": "Текст", "purpose": "Основной текст интерфейса и пояснения." },
+      "button": { "displayName": "Кнопка", "purpose": "Подписи кнопок; крупная кнопка входа 16px." },
+      "label": { "displayName": "Подпись", "purpose": "Название стопки, подписи полей и групп." },
+      "code": { "displayName": "Код", "purpose": "Редактор; размер меняется A−/A+ от 14 до 32px." },
+      "output": { "displayName": "Вывод", "purpose": "Вывод программы." },
+      "pin": { "displayName": "PIN", "purpose": "PIN в окне «поделиться»." }
+    },
+    "shadows": [
+      { "name": "task-card", "value": "0 1px 0 var(--line), 0 14px 30px -22px rgba(20,20,20,.35)", "purpose": "Карточка задачи на тёплом фоне." },
+      { "name": "entry-card", "value": "0 1px 0 var(--line), 0 30px 60px -40px rgba(20,20,20,.45)", "purpose": "Карточка входа в центре пустого экрана." },
+      { "name": "dropdown", "value": "0 24px 48px -24px rgba(20,20,20,.45)", "purpose": "Список всех стопок (с рамкой line)." },
+      { "name": "popover", "value": "0 30px 60px -30px rgba(20,20,20,.5), 0 0 0 1px var(--line)", "purpose": "Окно «поделиться» над редактором." }
+    ],
+    "motion": [
+      { "name": "control", "value": "background .15s, border-color .15s, transform .1s", "purpose": "Наведение и нажатие кнопок; нажатие сдвигает на 1px." },
+      { "name": "disclose", "value": "transform .2s", "purpose": "Поворот стрелки раскрывающегося пояснения." },
+      { "name": "pulse", "value": "1s ease-in-out infinite, opacity .25 на середине", "purpose": "Точка статуса «Выполняется»; отключается при prefers-reduced-motion." }
+    ],
+    "breakpoints": [
+      { "name": "compact", "value": "1100px", "purpose": "Без подписей у призрачных кнопок редактора и без подсказки клавиш; ввод input() в столбик." },
+      { "name": "phone", "value": "760px", "purpose": "Одна колонка: шапка, задача, редактор 65vh, вывод." }
+    ],
+    "focus": { "value": "outline: 2px solid var(--violet); outline-offset: 2px", "purpose": "Фокус клавиатуры везде; у полей ввода смещение 0 и рамка прозрачная." }
+  },
+  "components": [
+    {
+      "name": "Кнопка «Запустить»",
+      "kind": "button",
+      "refersTo": "button-run",
+      "description": "Единственная залитая кнопка экрана.",
+      "html": "<button class=\"ds-btn ds-btn-run\"><svg viewBox=\"0 0 16 16\" fill=\"currentColor\" aria-hidden=\"true\"><path d=\"M4 2.8v10.4L13 8z\"/></svg><span>Запустить</span><kbd>Ctrl ↵</kbd></button>",
+      "css": ".ds-btn { height: 40px; padding: 0 16px; border-radius: 10px; border: 1px solid var(--line, #E4E1DD); background: var(--paper, #fff); color: var(--ink, #141414); font: 700 14px 'Manrope Variable', 'Segoe UI', system-ui, sans-serif; display: inline-flex; align-items: center; gap: 8px; cursor: pointer; transition: background .15s, border-color .15s, transform .1s; } .ds-btn svg { width: 16px; height: 16px; } .ds-btn:active { transform: translateY(1px); } .ds-btn:focus-visible { outline: 2px solid var(--violet, #7C3AED); outline-offset: 2px; } .ds-btn-run { background: var(--violet, #7C3AED); color: #fff; border-color: transparent; padding: 0 20px 0 16px; } .ds-btn-run:hover { background: color-mix(in srgb, var(--violet, #7C3AED) 88%, #000); } .ds-btn-run kbd { font: 600 11px 'JetBrains Mono', monospace; opacity: .75; }"
+    },
+    {
+      "name": "Обычная и призрачная кнопки",
+      "kind": "button",
+      "refersTo": "button",
+      "description": "Белая кнопка с рамкой для навигации по задачам; призрачная для вспомогательных действий.",
+      "html": "<div style=\"display:flex;gap:8px\"><button class=\"ds-btn2\"><svg viewBox=\"0 0 16 16\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"1.7\" stroke-linecap=\"round\" stroke-linejoin=\"round\" aria-hidden=\"true\"><path d=\"M10 3 5 8l5 5\"/></svg><span>А1 · 8</span></button><button class=\"ds-btn2 ds-ghost\"><span>Заготовка</span></button><button class=\"ds-btn2 ds-stop\"><span>Стоп</span></button></div>",
+      "css": ".ds-btn2 { height: 40px; padding: 0 16px; border-radius: 10px; border: 1px solid var(--line, #E4E1DD); background: var(--paper, #fff); color: var(--ink, #141414); font: 700 14px 'Manrope Variable', system-ui, sans-serif; display: inline-flex; align-items: center; gap: 8px; cursor: pointer; transition: background .15s, border-color .15s, transform .1s; } .ds-btn2 svg { width: 16px; height: 16px; } .ds-btn2:hover { border-color: color-mix(in srgb, var(--ink, #141414) 25%, var(--line, #E4E1DD)); } .ds-btn2:active { transform: translateY(1px); } .ds-btn2:focus-visible { outline: 2px solid var(--violet, #7C3AED); outline-offset: 2px; } .ds-ghost { border-color: transparent; background: transparent; color: var(--ink-2, #4A4743); } .ds-ghost:hover { background: var(--ground, #F6F5F4); border-color: transparent; } .ds-stop { border-color: var(--danger, #C2410C); color: var(--danger, #C2410C); }"
+    },
+    {
+      "name": "Чипы стопки",
+      "kind": "chip",
+      "refersTo": "chip",
+      "description": "Ряд задач текущей стопки; активная залита чернилами, запущенная отмечена точкой.",
+      "html": "<div class=\"ds-stack\"><button class=\"ds-chip ds-on ds-ran\">Б4</button><button class=\"ds-chip ds-ran\">Б5</button><button class=\"ds-chip\">Б6</button><button class=\"ds-chip\">Н3</button></div>",
+      "css": ".ds-stack { display: flex; gap: 4px; } .ds-chip { height: 32px; padding: 0 11px; border-radius: 8px; font: 700 13px 'Manrope Variable', system-ui, sans-serif; display: inline-flex; align-items: center; gap: 6px; color: var(--ink-2, #4A4743); background: transparent; border: 1px solid transparent; cursor: pointer; } .ds-chip:hover { background: var(--ground, #F6F5F4); } .ds-chip:focus-visible { outline: 2px solid var(--violet, #7C3AED); outline-offset: 2px; } .ds-on, .ds-on:hover { background: var(--ink, #141414); color: var(--paper, #fff); } .ds-ran::after { content: ''; width: 6px; height: 6px; border-radius: 50%; background: var(--student, #0F8A5F); } .ds-on.ds-ran::after { background: var(--lime, #CDEB00); }"
+    },
+    {
+      "name": "Карточка задачи",
+      "kind": "card",
+      "refersTo": "task-card",
+      "description": "Карточка с доски: бейдж, уровень, условие, переход между задачами.",
+      "html": "<article class=\"ds-card\"><div class=\"ds-top\"><span class=\"ds-badge\">№10 · Б4</span><span class=\"ds-lvl\">База · маска · адрес сети</span></div><p class=\"ds-st\">Даны адрес узла 172.16.200.17 и маска 255.255.224.0. Найдите адрес сети.</p><div class=\"ds-foot\"><span>‹ А1 · 8</span><span>№10 · Б5 ›</span></div></article>",
+      "css": ".ds-card { background: var(--paper, #fff); border-radius: 18px; padding: 24px 24px 18px; display: flex; flex-direction: column; gap: 16px; box-shadow: 0 1px 0 var(--line, #E4E1DD), 0 14px 30px -22px rgba(20,20,20,.35); max-width: 380px; font-family: 'Manrope Variable', system-ui, sans-serif; color: var(--ink, #141414); } .ds-top { display: flex; align-items: center; gap: 10px; } .ds-badge { font: 800 14px 'Manrope Variable', system-ui, sans-serif; background: #141414; color: #CDEB00; padding: 5px 10px; border-radius: 7px; } .ds-lvl { font-size: 13px; font-weight: 700; color: var(--ink-3, #7D7872); } .ds-st { margin: 0; font-size: 18px; line-height: 1.55; font-weight: 500; } .ds-foot { display: flex; justify-content: space-between; border-top: 1px solid var(--line, #E4E1DD); padding-top: 14px; font-weight: 700; font-size: 14px; }"
+    },
+    {
+      "name": "Полоска автора и курсор с именем",
+      "kind": "custom",
+      "refersTo": "authorship-bar",
+      "description": "Подпись мира: полоса 6px цвета автора у каждой строки и всегда видимый флажок курсора собеседника.",
+      "html": "<div class=\"ds-ed\"><div class=\"ds-ln\"><i style=\"background:#7C3AED\"></i><b>1</b><code>hp = 100</code></div><div class=\"ds-ln\"><i style=\"background:#0F8A5F\"></i><b>2</b><code>print(hp<span class=\"ds-caret\"><span class=\"ds-flag\">Аршак</span></span>)</code></div></div>",
+      "css": ".ds-ed { background: var(--paper, #fff); padding: 14px 0; font: 400 20px/1.75 'JetBrains Mono', monospace; color: var(--ink, #141414); } .ds-ln { display: flex; align-items: stretch; } .ds-ln i { width: 6px; flex: none; } .ds-ln b { width: 40px; text-align: right; padding-right: 16px; font: 400 14px/35px 'JetBrains Mono', monospace; color: var(--ink-3, #7D7872); } .ds-caret { position: relative; border-left: 2px solid #0F8A5F; margin-left: -1px; } .ds-flag { position: absolute; left: -2px; top: -1.25em; font: 700 12px/1.4 'Manrope Variable', system-ui, sans-serif; padding: 1px 7px; border-radius: 6px 6px 6px 0; background: #0F8A5F; color: #fff; white-space: nowrap; }"
+    },
+    {
+      "name": "Карточка ошибки",
+      "kind": "card",
+      "refersTo": "error-card",
+      "description": "Ошибка Python простыми словами, трассировка ниже.",
+      "html": "<div class=\"ds-err\"><span class=\"ds-t\">NameError · строка 6</span><span class=\"ds-h\">Python не знает, что такое «x». Проверь написание. Если это текст, возьми его в кавычки: <code>'x'</code>.</span><pre>NameError: name 'x' is not defined</pre></div>",
+      "css": ".ds-err { background: var(--danger-soft, #FDEDE4); border-radius: 10px; padding: 12px 14px; display: grid; gap: 8px; font-family: 'Manrope Variable', system-ui, sans-serif; } .ds-t { font-weight: 800; font-size: 15px; color: var(--danger, #C2410C); } .ds-h { font-size: 16px; line-height: 1.5; color: var(--ink, #141414); } .ds-h code { font: 500 .9em 'JetBrains Mono', monospace; background: rgba(255,255,255,.6); padding: 1px 5px; border-radius: 5px; } .ds-err pre { margin: 0; font: 400 14px/1.55 'JetBrains Mono', monospace; color: var(--ink-2, #4A4743); white-space: pre-wrap; }"
+    },
+    {
+      "name": "Поле ввода",
+      "kind": "input",
+      "refersTo": "input",
+      "description": "Поле формы входа с подписью; фокус — фиолетовое кольцо вместо рамки.",
+      "html": "<div class=\"ds-field\"><label for=\"ds-n\">Как тебя зовут</label><input id=\"ds-n\" placeholder=\"Имя\"></div>",
+      "css": ".ds-field { display: grid; gap: 6px; max-width: 400px; font-family: 'Manrope Variable', system-ui, sans-serif; } .ds-field label { font: 700 13px 'Manrope Variable', system-ui, sans-serif; color: var(--ink-2, #4A4743); } .ds-field input { height: 48px; border: 1px solid var(--line, #E4E1DD); border-radius: 10px; padding: 0 14px; font: 500 17px 'Manrope Variable', system-ui, sans-serif; background: var(--paper, #fff); color: var(--ink, #141414); } .ds-field input:focus { outline: 2px solid var(--violet, #7C3AED); outline-offset: 0; border-color: transparent; }"
+    },
+    {
+      "name": "Шапка комнаты",
+      "kind": "nav",
+      "refersTo": "peer-pill",
+      "description": "Логотип, название занятия и пилюли участников.",
+      "html": "<header class=\"ds-bar\"><div class=\"ds-logo\"><i>&gt;_</i><span>Кодовая комната</span></div><span class=\"ds-lesson\">Занятие 01 · А1 Переменные и арифметика</span><span style=\"flex:1\"></span><span class=\"ds-peer\"><b style=\"background:#7C3AED\">Д</b>Денис <small>ведёт</small></span><span class=\"ds-peer\"><b style=\"background:#0F8A5F\">А</b>Аршак</span></header>",
+      "css": ".ds-bar { height: 60px; display: flex; align-items: center; gap: 18px; padding: 0 20px; background: var(--paper, #fff); border-bottom: 1px solid var(--line, #E4E1DD); font-family: 'Manrope Variable', system-ui, sans-serif; color: var(--ink, #141414); } .ds-logo { display: flex; align-items: center; gap: 10px; font-weight: 800; font-size: 17px; letter-spacing: -0.01em; } .ds-logo i { width: 28px; height: 28px; border-radius: 8px; background: #141414; display: grid; place-items: center; color: #CDEB00; font: 700 13px 'JetBrains Mono', monospace; font-style: normal; } .ds-lesson { font-size: 14px; font-weight: 600; color: var(--ink-2, #4A4743); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; } .ds-peer { display: inline-flex; align-items: center; gap: 8px; height: 32px; padding: 0 12px 0 5px; border-radius: 999px; background: var(--ground, #F6F5F4); font-size: 13px; font-weight: 700; } .ds-peer b { width: 22px; height: 22px; border-radius: 50%; display: grid; place-items: center; color: #fff; font-size: 11px; } .ds-peer small { font-weight: 600; color: var(--ink-3, #7D7872); }"
+    }
+  ],
+  "narrative": {
+    "northStar": "Карточка с доски у живого кода",
+    "overview": "Комната — это занятие на одном экране: слева белая карточка задачи, такая же, как на доске Holst, справа общий редактор Python, под ним вывод. Мир — фирменный стиль материалов ДенВал: тёплый светло-серый фон, белая бумага, почти чёрные чернила, один фиолетовый и один лаймовый акцент. Многопанельную IDE комната отвергает: никаких деревьев файлов, вкладок, терминалов и боковых панелей инструментов.\n\nПлотность рабочая, но крупная: код 20px, условие 18px, вывод 18px, потому что экран читают двое через демонстрацию и созвон. Глубина почти плоская: панели разделены линиями цвета `line`, тень есть только у карточек и всплывающих окон. Главный знак мира — полоска автора: у каждой строки кода цветная полоса 6px того, кто написал большую часть строки, и подписанные курсоры собеседника.",
+    "keyCharacteristics": [
+      "Одна карточка задачи и один редактор; вывод под редактором.",
+      "Фиолетовый — только у единственной залитой кнопки экрана («Запустить» в комнате, «Войти» / «Создать комнату» на входе) и у фокуса.",
+      "Лайм — маркер: подчёркивание-выделение в заголовке, текст бейджа на чернилах, выделение в коде.",
+      "Преподаватель фиолетовый, ученик зелёный; цвет человека везде один и тот же.",
+      "Manrope для интерфейса, JetBrains Mono для всего, что является кодом или его выводом.",
+      "Светлая и тёмная темы на одних и тех же ролях токенов."
+    ],
+    "rules": [
+      { "name": "Правило одной заливки", "body": "На экране ровно одна залитая фиолетовым кнопка. Остальные кнопки белые с рамкой `line` или призрачные.", "section": "colors" },
+      { "name": "Правило маркера", "body": "Лайм не стоит на светлом фоне как текст или заливка элемента управления. Он либо маркер под словом, либо текст на чернилах.", "section": "colors" },
+      { "name": "Правило одного цвета человека", "body": "Цвет участника один на всё: полоска строки, флажок курсора, кружок пилюли, легенда. Новые элементы, показывающие авторство, берут тот же цвет.", "section": "colors" },
+      { "name": "Правило красного для ошибок", "body": "Красно-оранжевые тона в интерфейсе означают только ошибку или остановку. Цвет участника не бывает красным или оранжевым.", "section": "colors" },
+      { "name": "Правило моно для кода", "body": "Код, вывод, имена файлов, ссылка на комнату и PIN — JetBrains Mono. Подписи и объяснения, даже про код, — Manrope.", "section": "typography" },
+      { "name": "Правило линий для панелей", "body": "Панели комнаты (шапка, редактор, вывод, колонка задачи) разделяются линиями, а не тенями. Тень — только у того, что можно мысленно снять с доски.", "section": "elevation" }
+    ],
+    "dos": [
+      "Do оставлять на экране одну фиолетовую заливку — главное действие экрана.",
+      "Do показывать авторство цветом участника: полоса 6px у строки, флажок с именем у курсора.",
+      "Do набирать код, вывод, PIN и ссылки JetBrains Mono, а объяснения — Manrope.",
+      "Do объяснять ошибки простым русским в карточке ошибки, трассировку давать ниже моно.",
+      "Do разделять панели линиями 1px `line`, а тень давать только карточкам и всплывающим окнам.",
+      "Do держать крупные размеры чтения: код 20px, условие и вывод 18px."
+    ],
+    "donts": [
+      "Don't превращать комнату в многопанельную IDE: дерево файлов, вкладки, терминал, боковые панели инструментов.",
+      "Don't заливать фиолетом вторую кнопку на том же экране.",
+      "Don't ставить лайм как текст или заливку на светлом фоне.",
+      "Don't давать участнику красный или оранжевый цвет: эти тона означают ошибку.",
+      "Don't прятать имя на курсоре собеседника до наведения."
+    ]
+  }
+}

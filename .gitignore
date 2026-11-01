@@ -3,3 +3,6 @@ dist/
 .DS_Store
 test-results/
 playwright-report/
+.claude/skills/impeccable/scripts/bin/
+.claude/settings.local.json
+public/pyodide/
