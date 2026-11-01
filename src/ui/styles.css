@@ -251,3 +251,8 @@ input, textarea { font: inherit; color: inherit; }
 .confirm-t { margin: 0 8px; font-size: 15px; line-height: 1.5; color: var(--ink-2); max-width: 52ch; }
 .confirm-row { display: flex; justify-content: flex-end; gap: 8px; padding: 8px; }
 @media (max-width: 760px) { .lessonnav { display: none; } }
+
+/* «Пригласить» у преподавателя: ссылка и PIN в любой момент (ST.1) */
+.invitebtn svg { width: 16px; height: 16px; }
+.invitebtn[aria-expanded="true"] { background: var(--ground); color: var(--ink); }
+@media (max-width: 1100px) { .invitebtn span { display: none; } .invitebtn { width: 40px; padding: 0; } }

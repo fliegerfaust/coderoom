@@ -14,5 +14,6 @@ export const ic = {
   minus: s('<path d="M4 8h8"/>'),
   plus: s('<path d="M4 8h8M8 4v8"/>'),
   file: s('<path d="M4 1.8h5l3 3v9.4H4z"/><path d="M9 1.8v3h3"/>'),
+  invite: s('<circle cx="6.5" cy="5.5" r="2.5"/><path d="M2 13.5c.6-2.3 2.3-3.5 4.5-3.5s3.9 1.2 4.5 3.5"/><path d="M12.5 4.5v4M10.5 6.5h4"/>'),
   input: s('<path d="M2.5 4.5h11v7h-11z"/><path d="M5 8h3"/>'),
 };
