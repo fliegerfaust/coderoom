@@ -1,6 +1,6 @@
 // Экран комнаты: шапка с присутствием, задача, общий редактор, вывод (UI.2).
-// Раскладка задаётся классом .lay-a / .lay-b / .lay-c (витрина UI.1), детали общие.
-import type { Room, RunState, Peer } from '../room/room';
+// Раскладка B «Карточка с доски» (выбор Дениса по витрине UI.1).
+import { Room, type RunState, type Peer } from '../room/room';
 import { CodeEditor } from '../editor/editor';
 import { FREE_TASK, findTask, type Lesson, type LessonIndexItem, type LessonTask } from '../lessons/types';
 import { renderStatement } from './markdown';
@@ -18,6 +18,8 @@ export class RoomView {
   private task: LessonTask = FREE_TASK;
   private els: Record<string, HTMLElement> = {};
   private listOpen = false;
+  /** Меню занятия в шапке (только у преподавателя): 'menu' | 'confirm' */
+  private lessonMenu: '' | 'menu' | 'confirm' = '';
   private boundStdin: (() => void) | null = null;
   private font = readFont();
   private tick = 0;
@@ -26,7 +28,7 @@ export class RoomView {
     this.root = h(`<div class="room">
       <header class="bar area-bar">
         <div class="logo"><i>&gt;_</i><span>Кодовая комната</span></div>
-        <span class="lesson-name" data-el="lessonName"></span>
+        <div class="lessonnav" data-el="lessonNav"></div>
         <span class="sp"></span>
         <span class="net" data-el="net" hidden>Нет связи, правки сохранятся и уйдут позже</span>
         <div class="peers" data-el="peers"></div>
@@ -37,7 +39,7 @@ export class RoomView {
           <div class="legend" data-el="legend"></div><span class="sp"></span>
           <button class="btn ghost icon" data-act="font-" title="Мельче">${ic.minus}</button>
           <button class="btn ghost icon" data-act="font+" title="Крупнее">${ic.plus}</button>
-          <button class="btn ghost" data-act="reset" title="Вернуть заготовку задачи">${ic.undo}<span>Заготовка</span></button>
+          <button class="btn ghost" data-act="reset" title="Сбросить задачу: заготовка в редакторе, пустой ввод, без вывода и отметки">${ic.undo}<span>Сбросить</span></button>
           <button class="btn stop" data-act="stop" data-el="stopBtn" disabled>${ic.stop}<span>Стоп</span></button>
           <button class="btn run" data-act="run" data-el="runBtn">${ic.play}<span>Запустить</span><kbd>${navigator.platform.includes('Mac') ? '⌘' : 'Ctrl'} ↵</kbd></button>
         </div>
@@ -53,10 +55,14 @@ export class RoomView {
     this.editor = new CodeEditor({ parent: this.els.editor, onRun: () => this.run(), fontSize: this.font });
     this.root.addEventListener('click', (e) => this.onClick(e));
     document.addEventListener('keydown', (e) => {
-      if (e.key === 'Escape' && this.listOpen) { this.listOpen = false; this.renderTask(); }
+      if (e.key !== 'Escape') return;
+      if (this.listOpen) { this.listOpen = false; this.renderTask(); }
+      if (this.lessonMenu) { this.lessonMenu = ''; this.renderLessonNav(); }
     });
     document.addEventListener('click', (e) => {
-      if (this.listOpen && !(e.target as HTMLElement).closest('.tasknav')) { this.listOpen = false; this.renderTask(); }
+      const t = e.target as HTMLElement;
+      if (this.listOpen && !t.closest('.tasknav')) { this.listOpen = false; this.renderTask(); }
+      if (this.lessonMenu && !t.closest('.lessonnav')) { this.lessonMenu = ''; this.renderLessonNav(); }
     });
   }
 
@@ -67,14 +73,14 @@ export class RoomView {
     r.onRun((run) => this.renderRun(run));
     r.runner.onState(() => this.renderButtons());
     r.onMeta(() => { void this.syncFromMeta(); });
-    r.doc.getMap('ran').observe(() => { if (this.listOpen) this.renderTask(); });
+    r.doc.getMap('ran').observe(() => this.renderTask());
     await this.syncFromMeta(true);
     // тик для «идёт 3 с»
     this.tick = self.setInterval(() => { if (r.run?.status === 'running') this.renderRun(r.run); }, 500);
   }
 
   private async ensureLesson(id: string | null) {
-    const item = this.lessons.find((l) => l.id === id) ?? this.lessons[this.lessons.length - 1];
+    const item = this.lessons.find((l) => l.id === id) ?? this.lessons[0];
     if (!item) { this.lesson = null; this.flat = []; return; }
     if (this.lesson?.id !== item.id) {
       this.lesson = await this.loadLesson(item);
@@ -85,8 +91,8 @@ export class RoomView {
   /** Открытая задача — общая: берём её из документа комнаты. Пусто — открываем первую. */
   private async syncFromMeta(first = false) {
     const r = this.room;
-    await this.ensureLesson(r.lessonId);
-    this.els.lessonName.textContent = this.lesson?.title ?? 'Свободная комната';
+    await this.ensureLesson(r.lessonId ?? r.created.lesson ?? null);
+    this.renderLessonNav();
     const id = r.taskId;
     const t = id ? findTask(this.lesson, id) : null;
     if (!t) { this.open(this.flat[0] ?? FREE_TASK); return; }
@@ -102,7 +108,7 @@ export class RoomView {
   private show(t: LessonTask) {
     this.task = t;
     this.renderTask();
-    this.editor.bind(this.room.code(t.id), this.room.awareness, this.room.clients);
+    this.editor.bind(this.room.code(this.key(t)), this.room.awareness, this.room.clients);
     this.bindStdin();
     this.renderRun(this.room.run);
     this.renderLegend();
@@ -111,13 +117,50 @@ export class RoomView {
   private bindStdin() {
     this.boundStdin?.();
     const ta = this.els.stdin as HTMLTextAreaElement;
-    const yt = this.room.stdin(this.task.id);
+    const yt = this.room.stdin(this.key(this.task));
     ta.value = yt.toString();
     const fromDoc = () => { if (document.activeElement !== ta) ta.value = yt.toString(); };
     const fromUser = () => { this.room.doc.transact(() => { yt.delete(0, yt.length); yt.insert(0, ta.value); }); };
     yt.observe(fromDoc);
     ta.addEventListener('input', fromUser);
     this.boundStdin = () => { yt.unobserve(fromDoc); ta.removeEventListener('input', fromUser); };
+  }
+
+  private key(t: LessonTask) { return Room.key(this.lesson?.id ?? null, t.id); }
+
+  // ── занятие: переключатель и «Стереть всё» (LS.4, RM.4) ──
+  private renderLessonNav() {
+    const nav = this.els.lessonNav;
+    const title = this.lesson?.title ?? 'Свободная комната';
+    if (!this.room.teacher) { nav.innerHTML = `<span class="lesson-name">${esc(title)}</span>`; return; }
+    let panel = '';
+    if (this.lessonMenu === 'menu') {
+      panel = `<div class="lessonmenu" role="dialog" aria-label="Занятие">
+        <h4>Занятие</h4>
+        <div class="lessonlist">${this.lessons.map((l) => `<button class="lessonrow ${l.id === this.lesson?.id ? 'on' : ''}" data-lesson="${esc(l.id)}">
+          <b>${esc(l.short)}</b><span>${esc(l.title.replace(/^Занятие \d+\s*·\s*/, ''))}</span></button>`).join('')}</div>
+        <div class="danger-zone"><div><b>Начать заново</b><span>Стереть код, ввод, вывод и отметки всех задач. Ссылка и PIN останутся.</span></div>
+          <button class="btn danger" data-act="erase-ask">${ic.undo}<span>Стереть всё…</span></button></div>
+      </div>`;
+    } else if (this.lessonMenu === 'confirm') {
+      panel = `<div class="lessonmenu" role="alertdialog" aria-label="Стереть всё в комнате">
+        <h4>Стереть всё в комнате?</h4>
+        <p class="confirm-t">Код, ввод, вывод и отметки всех задач исчезнут у обоих. Вернуть их будет нельзя. Ссылка и PIN останутся прежними.</p>
+        <div class="confirm-row"><button class="btn" data-act="erase-cancel">Отмена</button><button class="btn danger" data-act="erase-do">Стереть всё</button></div>
+      </div>`;
+    }
+    nav.innerHTML = `<button class="btn ghost lessonbtn" data-act="lessons" aria-expanded="${!!this.lessonMenu}" aria-haspopup="dialog" title="Сменить занятие или начать заново">
+      <span class="lesson-name">${esc(title)}</span>${ic.down}</button>${panel}`;
+  }
+
+  private async openLesson(id: string) {
+    this.lessonMenu = '';
+    const item = this.lessons.find((l) => l.id === id);
+    if (!item) return;
+    this.lesson = await this.loadLesson(item);
+    this.flat = this.lesson.groups.flatMap((g) => g.tasks);
+    this.open(this.flat[0] ?? FREE_TASK);
+    this.renderLessonNav();
   }
 
   // ── задача ──
@@ -128,7 +171,7 @@ export class RoomView {
     const t = this.task, i = this.idx(), g = this.groupOf(t);
     const prev = i > 0 ? this.flat[i - 1] : null, next = i >= 0 && i < this.flat.length - 1 ? this.flat[i + 1] : null;
     const ran = this.room.doc.getMap<{ status: string }>('ran');
-    const key = (x: LessonTask) => `${this.lesson?.id ?? '-'}:${x.id}`;
+    const key = (x: LessonTask) => this.key(x);
     const chips = (ts: LessonTask[]) => ts.map((x) =>
       `<button class="chip ${x.id === t.id ? 'on' : ''} ${ran.get(key(x)) ? 'ran' : ''}" data-task="${x.id}" title="${esc(x.label)}">${esc(short(x))}</button>`).join('');
     const list = this.listOpen ? `<div class="tasklist" role="dialog" aria-label="Все задачи занятия">
@@ -182,7 +225,7 @@ export class RoomView {
 
   private renderRun(run: RunState | null) {
     this.renderButtons();
-    const mine = run && run.task === this.task.id ? run : null;
+    const mine = run && run.task === this.key(this.task) ? run : null;
     const st = this.els.status, info = this.els.runInfo, out = this.els.out;
     if (!mine) {
       st.className = 'status idle'; st.innerHTML = '<i></i>Вывод';
@@ -215,8 +258,9 @@ export class RoomView {
   }
 
   private onClick(e: MouseEvent) {
-    const el = (e.target as HTMLElement).closest<HTMLElement>('[data-act],[data-task]');
+    const el = (e.target as HTMLElement).closest<HTMLElement>('[data-act],[data-task],[data-lesson]');
     if (!el || (el as HTMLButtonElement).disabled) return;
+    if (el.dataset.lesson !== undefined) { void this.openLesson(el.dataset.lesson); return; }
     if (el.dataset.task !== undefined) {
       const t = el.dataset.task === 'free' ? FREE_TASK : this.flat.find((x) => x.id === el.dataset.task);
       if (t) this.open(t);
@@ -225,7 +269,15 @@ export class RoomView {
     switch (el.dataset.act) {
       case 'run': this.run(); break;
       case 'stop': this.room.stop(); break;
-      case 'reset': this.room.resetToStarter(this.task); this.editor.focus(); break;
+      case 'reset': this.room.resetTask(this.task, this.lesson?.id ?? null); this.editor.focus(); break;
+      case 'lessons': this.lessonMenu = this.lessonMenu ? '' : 'menu'; this.renderLessonNav(); e.stopPropagation(); break;
+      case 'erase-ask': this.lessonMenu = 'confirm'; this.renderLessonNav(); e.stopPropagation(); break;
+      case 'erase-cancel': this.lessonMenu = 'menu'; this.renderLessonNav(); e.stopPropagation(); break;
+      case 'erase-do': {
+        const b = el as HTMLButtonElement; b.disabled = true; b.textContent = 'Стираю…';
+        void this.room.eraseAll(this.lesson?.id ?? null).catch(() => { toast('Не получилось стереть: нет связи. Попробуй ещё раз.'); this.lessonMenu = ''; this.renderLessonNav(); });
+        break;
+      }
       case 'list': this.listOpen = !this.listOpen; this.renderTask(); e.stopPropagation(); break;
       case 'intro': { const p = el.nextElementSibling as HTMLElement; p.hidden = !p.hidden; el.setAttribute('aria-expanded', String(!p.hidden)); break; }
       case 'font-': case 'font+': {

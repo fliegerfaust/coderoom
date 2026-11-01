@@ -35,7 +35,11 @@ export class Room {
   /** clientID → автор: для полоски авторства строк */
   readonly clients = this.doc.getMap<{ name: string; color: string }>('clients');
   private inited = this.doc.getMap<boolean>('inited');
-  private sync: YSync;
+  private sync: YSync | null = null;
+  /** Поколение комнаты: «Стереть всё» начинает новое, старые данные удаляются */
+  gen = 0;
+  created: { lesson?: string; gen?: number } = {};
+  private resetListeners = new Set<() => void>();
   private unsubs: Unsub[] = [];
   run: RunState | null = null;
   private runListeners = new Set<(r: RunState | null) => void>();
@@ -44,9 +48,10 @@ export class Room {
   private outTimer = 0;
   private myRun = '';
 
-  constructor(readonly db: Db, readonly base: string, readonly me: Me, readonly teacher: boolean, readonly runner: PythonRunner) {
-    this.sync = new YSync(db, base, this.doc, this.awareness);
-  }
+  constructor(readonly db: Db, readonly base: string, readonly me: Me, readonly teacher: boolean, readonly runner: PythonRunner) {}
+
+  /** Документ поколения 0 лежит прямо в комнате (так было до 0.2.0), следующие — в g/<n> */
+  private docBase() { return this.gen ? `${this.base}/g/${this.gen}` : this.base; }
 
   static async exists(db: Db, base: string) { return !!(await db.get(`${base}/created`)); }
   static async create(db: Db, base: string, by: Me, lesson: string) {
@@ -54,7 +59,14 @@ export class Room {
   }
 
   async start() {
+    this.created = ((await this.db.get(`${this.base}/created`)) ?? {}) as typeof this.created;
+    this.gen = this.created.gen ?? 0;
+    this.sync = new YSync(this.db, this.docBase(), this.doc, this.awareness);
     await this.sync.start();
+    // кто-то стёр комнату: у всех открывается чистая
+    this.unsubs.push(this.db.onValue(`${this.base}/created/gen`, (v) => {
+      if ((Number(v) || 0) !== this.gen) this.resetListeners.forEach((f) => f());
+    }));
     const mine = this.clients.get(String(this.doc.clientID));
     if (!mine || mine.name !== this.me.name) this.clients.set(String(this.doc.clientID), { name: this.me.name, color: this.me.color });
     this.awareness.setLocalStateField('user', { id: this.me.id, name: this.me.name, color: this.me.color, colorLight: this.me.color + '33', teacher: this.teacher });
@@ -68,16 +80,18 @@ export class Room {
   // ── задача ──────────────────────────────────────────────
   get lessonId(): string | null { return (this.meta.get('lesson') as string) ?? null; }
   get taskId(): string | null { return (this.meta.get('task') as string) ?? null; }
-  code(taskId: string) { return this.doc.getText('code:' + taskId); }
-  stdin(taskId: string) { return this.doc.getText('stdin:' + taskId); }
+  /** Код и ввод задачи — по паре «занятие:задача»: номера задач в разных занятиях повторяются */
+  static key(lessonId: string | null, taskId: string) { return `${lessonId ?? '-'}:${taskId}`; }
+  code(key: string) { return this.doc.getText('code:' + key); }
+  stdin(key: string) { return this.doc.getText('stdin:' + key); }
 
   /** Открыть задачу у обоих. Заготовку вставляет тот, кто открыл задачу первым (ED.3). */
   openTask(task: LessonTask, lessonId: string | null) {
     this.doc.transact(() => {
       if (lessonId && this.meta.get('lesson') !== lessonId) this.meta.set('lesson', lessonId);
       this.meta.set('task', task.id);
-      const key = `${lessonId ?? '-'}:${task.id}`;
-      const text = this.code(task.id);
+      const key = Room.key(lessonId, task.id);
+      const text = this.code(key);
       if (!this.inited.get(key)) {
         if (text.length === 0 && task.starter) text.insert(0, task.starter);
         this.inited.set(key, true);
@@ -86,10 +100,27 @@ export class Room {
     this.awareness.setLocalStateField('task', task.id);
   }
 
-  resetToStarter(task: LessonTask) {
-    const t = this.code(task.id);
-    this.doc.transact(() => { t.delete(0, t.length); if (task.starter) t.insert(0, task.starter); });
+  /** «Сбросить» задачу: заготовка в редакторе, пустой ввод, без отметки и вывода (RM.5) */
+  resetTask(task: LessonTask, lessonId: string | null) {
+    const key = Room.key(lessonId, task.id);
+    const t = this.code(key), inp = this.stdin(key);
+    this.doc.transact(() => {
+      t.delete(0, t.length); if (task.starter) t.insert(0, task.starter);
+      inp.delete(0, inp.length);
+      this.doc.getMap('ran').delete(key);
+    });
+    if (this.run?.task === key && this.run.status !== 'running') void this.db.set(`${this.base}/run`, null);
   }
+
+  /** «Стереть всё»: код, ввод, вывод и отметки у всех; ссылка и PIN остаются (RM.4) */
+  async eraseAll(lessonId: string | null) {
+    if (this.run?.status === 'running') this.stop();
+    await this.db.update(this.base, {
+      'created/gen': this.gen + 1, 'created/lesson': lessonId ?? this.created.lesson ?? null,
+      snap: null, upd: null, aw: null, run: null, g: null,
+    });
+  }
+  onReset(fn: () => void): Unsub { this.resetListeners.add(fn); return () => this.resetListeners.delete(fn); }
 
   onMeta(fn: () => void): Unsub { const h = () => fn(); this.meta.observe(h); return () => this.meta.unobserve(h); }
 
@@ -114,8 +145,9 @@ export class Room {
   onRun(fn: (r: RunState | null) => void): Unsub { this.runListeners.add(fn); fn(this.run); return () => this.runListeners.delete(fn); }
 
   async runTask(task: LessonTask, lessonId: string | null = null) {
-    const code = this.code(task.id).toString();
-    const stdin = this.stdin(task.id).toString();
+    const key = Room.key(lessonId, task.id);
+    const code = this.code(key).toString();
+    const stdin = this.stdin(key).toString();
     this.outBuf = ''; this.outCut = false;
     const id = this.runner.run(code, stdin, task.files ?? [], {
       onOut: (s) => {
@@ -129,12 +161,12 @@ export class Room {
         const patch: Partial<RunState> = { status: st, out: this.outBuf, cut: this.outCut, ms: r.ms };
         if (!r.ok && 'error' in r) patch.error = r.error;
         if (this.run && this.run.id === id) void this.db.set(`${this.base}/run`, { ...this.run, ...patch, stop: null });
-        this.doc.getMap('ran').set(`${lessonId ?? '-'}:${task.id}`, { status: st, by: this.me.name, at: Date.now() });
+        this.doc.getMap('ran').set(key, { status: st, by: this.me.name, at: Date.now() });
         this.myRun = '';
       },
     });
     this.myRun = id;
-    const st: RunState = { id, by: this.me.id, name: this.me.name, task: task.id, status: 'running', out: '', at: Date.now() };
+    const st: RunState = { id, by: this.me.id, name: this.me.name, task: key, status: 'running', out: '', at: Date.now() };
     this.run = st;
     await this.db.set(`${this.base}/run`, st);
   }
@@ -154,6 +186,6 @@ export class Room {
 
   destroy() {
     this.unsubs.forEach((u) => u());
-    this.sync.destroy();
+    this.sync?.destroy();
   }
 }
