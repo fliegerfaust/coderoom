@@ -1,0 +1,109 @@
+{
+ "id": "06",
+ "short": "Занятие 06",
+ "title": "Занятие 06 · А6 break и while",
+ "groups": [
+  {
+   "id": "class-py",
+   "title": "На занятии · Python А6",
+   "tasks": [
+    {
+     "id": "c-a6-1",
+     "label": "А6 · 1",
+     "kind": "predict",
+     "topic": "Предскажи вывод",
+     "level": 1,
+     "statement": "Что напечатает программа? Сначала запиши ответ, потом запусти.\n\n```python\nfor ch in 'ПРИВЕТ':\n    if ch in 'АЕИОУ':\n        print(ch)\n        break\n```",
+     "starter": "for ch in 'ПРИВЕТ':\n    if ch in 'АЕИОУ':\n        print(ch)\n        break\n"
+    },
+    {
+     "id": "c-a6-2",
+     "label": "А6 · 2",
+     "kind": "predict",
+     "topic": "Предскажи вывод",
+     "level": 1,
+     "statement": "Что напечатает программа? Сначала запиши ответ, потом запусти.\n\n```python\nlast = 0\nfor i in range(1, 20):\n    if i % 6 == 0:\n        last = i\nprint(last)\n```",
+     "starter": "last = 0\nfor i in range(1, 20):\n    if i % 6 == 0:\n        last = i\nprint(last)\n"
+    },
+    {
+     "id": "c-a6-3",
+     "label": "А6 · 3",
+     "kind": "predict",
+     "topic": "Предскажи вывод",
+     "level": 1,
+     "statement": "Что напечатает программа? Сначала запиши ответ, потом запусти.\n\n```python\nn = 1\nwhile n < 100:\n    n *= 2\nprint(n)\n```",
+     "starter": "n = 1\nwhile n < 100:\n    n *= 2\nprint(n)\n"
+    },
+    {
+     "id": "c-a6-4",
+     "label": "А6 · 4",
+     "kind": "predict",
+     "topic": "Предскажи вывод",
+     "level": 1,
+     "statement": "Что напечатает программа? Сначала запиши ответ, потом запусти.\n\n```python\ns = 'ААААА'\nwhile 'АА' in s:\n    s = s.replace('АА', 'Б', 1)\nprint(s)\n```",
+     "starter": "s = 'ААААА'\nwhile 'АА' in s:\n    s = s.replace('АА', 'Б', 1)\nprint(s)\n"
+    },
+    {
+     "id": "c-a6-5",
+     "label": "А6 · 5",
+     "kind": "bug",
+     "topic": "Найди ошибку",
+     "level": 1,
+     "statement": "Программа зависла и ничего не печатает. Почему?\n\n```python\nn = 1\nwhile n < 10:\n    print(n)\n```",
+     "starter": "n = 1\nwhile n < 10:\n    print(n)\n"
+    },
+    {
+     "id": "c-a6-6",
+     "label": "А6 · 6",
+     "kind": "make",
+     "topic": "Напиши сам",
+     "level": 1,
+     "statement": "Найди первое число больше 1000, которое делится и на 17, и на 23.",
+     "starter": "x = 1001\nwhile not (___):\n    x += 1\nprint(x)\n"
+    }
+   ]
+  },
+  {
+   "id": "home-py",
+   "title": "Дома · Python А6",
+   "tasks": [
+    {
+     "id": "h-a6-1",
+     "label": "А6 · 1",
+     "kind": "predict",
+     "topic": "Предскажи вывод",
+     "level": 1,
+     "statement": "Что напечатает программа? Сначала запиши ответ, потом запусти.\n\n```python\nn, steps = 100, 0\nwhile n > 1:\n    n //= 2\n    steps += 1\nprint(steps)\n```",
+     "starter": "n, steps = 100, 0\nwhile n > 1:\n    n //= 2\n    steps += 1\nprint(steps)\n"
+    },
+    {
+     "id": "h-a6-2",
+     "label": "А6 · 2",
+     "kind": "predict",
+     "topic": "Предскажи вывод",
+     "level": 1,
+     "statement": "Что напечатает программа? Сначала запиши ответ, потом запусти.\n\n```python\nfor x in range(10, 100):\n    if x % 13 == 0:\n        print(x)\n        break\n```",
+     "starter": "for x in range(10, 100):\n    if x % 13 == 0:\n        print(x)\n        break\n"
+    },
+    {
+     "id": "h-a6-3",
+     "label": "А6 · 3",
+     "kind": "make",
+     "topic": "Напиши сам",
+     "level": 1,
+     "statement": "Первое число больше 500, которое делится и на 7, и на 11.",
+     "starter": "\n"
+    },
+    {
+     "id": "h-a6-4",
+     "label": "А6 · 4",
+     "kind": "make",
+     "topic": "Напиши сам",
+     "level": 1,
+     "statement": "Маленький №12: пока в строке есть «ОО», меняем первое «ОО» на «О». Что останется от 'ОООООО'?",
+     "starter": "\n"
+    }
+   ]
+  }
+ ]
+}

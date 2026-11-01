@@ -19,7 +19,7 @@ test('преподаватель создаёт комнату, ученик в�
 
   // ученик: неверный PIN, потом верный
   const s = await context.newPage();
-  await s.addInitScript(() => { try { localStorage.removeItem('coderoom-me'); localStorage.removeItem('coderoom-rooms'); } catch { /* */ } });
+  await s.addInitScript(() => { try { if (!sessionStorage.getItem('e2e')) { sessionStorage.setItem('e2e', '1'); localStorage.removeItem('coderoom-me'); localStorage.removeItem('coderoom-rooms'); } } catch { /* */ } });
   await s.goto(link.replace(/^.*?\?/, './?').replace('#', '&x=1#').replace('&x=1', ''));
   await s.getByLabel('Как тебя зовут').fill('Аршак');
   await s.getByLabel('PIN комнаты').fill(pin === '0000' ? '1111' : '0000');
@@ -78,4 +78,65 @@ test('преподаватель создаёт комнату, ученик в�
   await t.locator('.cm-content').click();
   await t.keyboard.press('ControlOrMeta+Enter');
   await expect(s.locator('.outbody')).toContainText('abab', { timeout: 60_000 });
+});
+
+test('преподаватель меняет занятие и стирает всё в комнате, у ученика тоже чисто', async ({ context }) => {
+  const t = await context.newPage();
+  await t.goto('./?db=local');
+  await t.getByLabel('Твоё имя в комнате').fill('Денис');
+  await t.getByRole('button', { name: 'Создать комнату' }).click();
+  const pin = (await t.locator('.pinbig').textContent())!.trim();
+  const link = (await t.locator('[data-link]').textContent())!.trim();
+  await t.getByRole('button', { name: 'Готово' }).click();
+  const s = await context.newPage();
+  await s.addInitScript(() => { try { if (!sessionStorage.getItem('e2e')) { sessionStorage.setItem('e2e', '1'); localStorage.removeItem('coderoom-me'); localStorage.removeItem('coderoom-rooms'); } } catch { /* */ } });
+  await s.goto('./?db=local#' + link.split('#')[1]);
+  await s.getByLabel('Как тебя зовут').fill('Аршак');
+  await s.getByLabel('PIN комнаты').fill(pin);
+  await s.getByRole('button', { name: 'Войти' }).click();
+  await expect(s.locator('.badge')).toHaveText('А1 · 1');
+  // у ученика нет меню занятия
+  await expect(s.locator('.lessonbtn')).toHaveCount(0);
+
+  // запуск — отметка; «Сбросить» снимает её и возвращает заготовку
+  await s.locator('.cm-content').click();
+  await s.keyboard.press('ControlOrMeta+End');
+  await s.keyboard.type('\nprint("тест")');
+  await s.keyboard.press('ControlOrMeta+Enter');
+  await expect(t.locator('.outbody')).toContainText('тест', { timeout: 60_000 });
+  await expect(t.locator('.stack .chip.ran')).toHaveCount(1);
+  await t.getByRole('button', { name: 'Сбросить', exact: true }).click();
+  await expect(s.locator('.stack .chip.ran')).toHaveCount(0);
+  await expect(s.locator('.cm-content')).not.toContainText('тест');
+  await expect(s.locator('.outbody .empty')).toBeVisible();
+
+  // смена занятия: у ученика открывается занятие 02
+  await t.locator('.lessonbtn').click();
+  await t.locator('[data-lesson="02"]').click();
+  await expect(s.locator('.badge')).toHaveText('А2 · 1');
+  await expect(s.locator('.lesson-name')).toContainText('Занятие 02');
+
+  // набираем код и запускаем, потом «Стереть всё»
+  await s.locator('.cm-content').click();
+  await s.keyboard.press('ControlOrMeta+End');
+  await s.keyboard.type('\nprint("след")');
+  await s.keyboard.press('ControlOrMeta+Enter');
+  await expect(t.locator('.outbody')).toContainText('след', { timeout: 60_000 });
+  await t.locator('.lessonbtn').click();
+  await t.getByRole('button', { name: 'Стереть всё…' }).click();
+  await expect(t.getByText('Стереть всё в комнате?')).toBeVisible();
+  await t.getByRole('button', { name: 'Стереть всё', exact: true }).click();
+
+  // у обоих чистая комната того же занятия, вход без формы
+  for (const p of [t, s]) {
+    await expect(p.locator('.badge')).toHaveText('А2 · 1');
+    await expect(p.locator('.cm-content')).not.toContainText('след');
+    await expect(p.locator('.chip.ran')).toHaveCount(0);
+    await expect(p.locator('.outbody .empty')).toBeVisible();
+  }
+  // комната живая после стирания: правка доходит
+  await s.locator('.cm-content').click();
+  await s.keyboard.press('ControlOrMeta+End');
+  await s.keyboard.type('\nx = 42');
+  await expect(t.locator('.cm-content')).toContainText('x = 42');
 });

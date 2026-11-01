@@ -1,0 +1,91 @@
+{
+ "id": "09",
+ "short": "Занятие 09",
+ "title": "Занятие 09 · А9 Функции",
+ "groups": [
+  {
+   "id": "class-py",
+   "title": "На занятии · Python А9",
+   "tasks": [
+    {
+     "id": "c-a9-1",
+     "label": "А9 · 1",
+     "kind": "predict",
+     "topic": "Предскажи вывод",
+     "level": 1,
+     "statement": "Что напечатает программа? Сначала запиши ответ, потом запусти.\n\n```python\ndef sq(x):\n    return x * x\n\nprint(sq(7) + sq(1))\n```",
+     "starter": "def sq(x):\n    return x * x\n\nprint(sq(7) + sq(1))\n"
+    },
+    {
+     "id": "c-a9-2",
+     "label": "А9 · 2",
+     "kind": "predict",
+     "topic": "Предскажи вывод",
+     "level": 1,
+     "statement": "Что напечатает программа? Сначала запиши ответ, потом запусти.\n\n```python\ndef f(n):\n    if n == 1:\n        return 1\n    return n + f(n - 1)\n\nprint(f(5))\n```",
+     "starter": "def f(n):\n    if n == 1:\n        return 1\n    return n + f(n - 1)\n\nprint(f(5))\n"
+    },
+    {
+     "id": "c-a9-3",
+     "label": "А9 · 3",
+     "kind": "predict",
+     "topic": "Предскажи вывод",
+     "level": 1,
+     "statement": "Что напечатает программа? Сначала запиши ответ, потом запусти.\n\n```python\ndef is_even(x):\n    return x % 2 == 0\n\nprint(is_even(10), is_even(7))\n```",
+     "starter": "def is_even(x):\n    return x % 2 == 0\n\nprint(is_even(10), is_even(7))\n"
+    },
+    {
+     "id": "c-a9-4",
+     "label": "А9 · 4",
+     "kind": "bug",
+     "topic": "Найди ошибку",
+     "level": 1,
+     "statement": "Функция ничего не возвращает — печатается None. Почему?\n\n```python\ndef sq(x):\n    x * x\n\nprint(sq(5))\n```",
+     "starter": "def sq(x):\n    x * x\n\nprint(sq(5))\n"
+    },
+    {
+     "id": "c-a9-5",
+     "label": "А9 · 5",
+     "kind": "make",
+     "topic": "Напиши сам",
+     "level": 1,
+     "statement": "№16 в миниатюре: F(1) = 1, F(n) = 2·F(n − 1) + 1 при n > 1. Найди F(10).",
+     "starter": "def F(n):\n    if n == 1:\n        return ___\n    return ___\n\nprint(F(10))\n"
+    }
+   ]
+  },
+  {
+   "id": "home-py",
+   "title": "Дома · Python А9",
+   "tasks": [
+    {
+     "id": "h-a9-1",
+     "label": "А9 · 1",
+     "kind": "predict",
+     "topic": "Предскажи вывод",
+     "level": 1,
+     "statement": "Что напечатает программа? Сначала запиши ответ, потом запусти.\n\n```python\ndef f(x):\n    return x * 2 + 1\n\nprint(f(f(1)))\n```",
+     "starter": "def f(x):\n    return x * 2 + 1\n\nprint(f(f(1)))\n"
+    },
+    {
+     "id": "h-a9-2",
+     "label": "А9 · 2",
+     "kind": "make",
+     "topic": "Напиши сам",
+     "level": 1,
+     "statement": "F(1) = F(2) = 1, F(n) = F(n − 1) + F(n − 2). Найди F(10).",
+     "starter": "\n"
+    },
+    {
+     "id": "h-a9-3",
+     "label": "А9 · 3",
+     "kind": "make",
+     "topic": "Напиши сам",
+     "level": 1,
+     "statement": "Напиши функцию digits(x), которая считает сумму цифр числа. Проверь на 2027.",
+     "starter": "\n"
+    }
+   ]
+  }
+ ]
+}

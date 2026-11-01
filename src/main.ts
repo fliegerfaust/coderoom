@@ -31,7 +31,7 @@ async function enter(r: EntryResult): Promise<string | null> {
   const base = await roomPath(r.room, r.pin);
   if (r.create) {
     const lessons = await loadIndex(BASE);
-    await Room.create(db, base, { id: '', name: r.name, color: '' }, lessons.at(-1)?.id ?? '');
+    await Room.create(db, base, { id: '', name: r.name, color: '' }, lessons[0]?.id ?? '');
   } else if (!(await Room.exists(db, base))) {
     forgetRoom(r.room);
     return 'Комната не найдена. Проверь PIN или попроси новую ссылку.';
@@ -48,6 +48,8 @@ async function openRoom(db: Db, base: string, me: ReturnType<typeof saveMe>, tea
   app.replaceChildren(h('<div class="loading">Открываю комнату…</div>'));
   room = new Room(db, base, me, teacher, runner);
   await room.start();
+  // «Стереть всё» у кого угодно — у всех открывается чистая комната того же адреса
+  room.onReset(() => location.reload());
   const lessons = await loadIndex(BASE);
   view = new RoomView(room, lessons, (i) => loadLesson(i, BASE));
   app.replaceChildren(view.root);
