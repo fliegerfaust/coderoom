@@ -1,0 +1,42 @@
+{
+ "name": {
+  "code": "print(Аршак)",
+  "raw": "Traceback (most recent call last):\n  File \"/lib/python314.zip/_pyodide/_base.py\", line 619, in eval_code_async\n    await CodeRunner(\n    ...<10 lines>...\n    .run_async(globals, locals)\n  File \"/lib/python314.zip/_pyodide/_base.py\", line 420, in run_async\n    coroutine = eval(self.code, globals, locals)\n  File \"program.py\", line 1, in <module>\n    print(Аршак)\n          ^^^^^\nNameError: name 'Аршак' is not defined\n"
+ },
+ "colon": {
+  "code": "for i in range(3)\n    print(i)",
+  "raw": "Traceback (most recent call last):\n  File \"/lib/python314.zip/_pyodide/_base.py\", line 619, in eval_code_async\n    await CodeRunner(\n          ~~~~~~~~~~^\n        source,\n        ^^^^^^^\n    ...<6 lines>...\n        dedent=dedent,\n        ^^^^^^^^^^^^^^\n    )\n    ^\n  File \"/lib/python314.zip/_pyodide/_base.py\", line 294, in __init__\n    self.ast = next(self._gen)\n               ~~~~^^^^^^^^^^^\n  File \"/lib/python314.zip/_pyodide/_base.py\", line 151, in _parse_and_compile_gen\n    mod = compile(source, filename, mode, flags | ast.PyCF_ONLY_AST)\n  File \"program.py\", line 1\n    for i in range(3)\n                     ^\nSyntaxError: expected ':'\n"
+ },
+ "indent": {
+  "code": "x = 5\nif x > 2:\nprint(x)",
+  "raw": "Traceback (most recent call last):\n  File \"/lib/python314.zip/_pyodide/_base.py\", line 619, in eval_code_async\n    await CodeRunner(\n          ~~~~~~~~~~^\n        source,\n        ^^^^^^^\n    ...<6 lines>...\n        dedent=dedent,\n        ^^^^^^^^^^^^^^\n    )\n    ^\n  File \"/lib/python314.zip/_pyodide/_base.py\", line 294, in __init__\n    self.ast = next(self._gen)\n               ~~~~^^^^^^^^^^^\n  File \"/lib/python314.zip/_pyodide/_base.py\", line 151, in _parse_and_compile_gen\n    mod = compile(source, filename, mode, flags | ast.PyCF_ONLY_AST)\n  File \"program.py\", line 3\n    print(x)\n    ^^^^^\nIndentationError: expected an indented block after 'if' statement on line 2\n"
+ },
+ "concat": {
+  "code": "print('a' + 1)",
+  "raw": "Traceback (most recent call last):\n  File \"/lib/python314.zip/_pyodide/_base.py\", line 619, in eval_code_async\n    await CodeRunner(\n    ...<10 lines>...\n    .run_async(globals, locals)\n  File \"/lib/python314.zip/_pyodide/_base.py\", line 420, in run_async\n    coroutine = eval(self.code, globals, locals)\n  File \"program.py\", line 1, in <module>\n    print('a' + 1)\n          ~~~~^~~\nTypeError: can only concatenate str (not \"int\") to str\n"
+ },
+ "zero": {
+  "code": "def f(n):\n    return 1/n\nprint(f(0))",
+  "raw": "Traceback (most recent call last):\n  File \"/lib/python314.zip/_pyodide/_base.py\", line 619, in eval_code_async\n    await CodeRunner(\n    ...<10 lines>...\n    .run_async(globals, locals)\n  File \"/lib/python314.zip/_pyodide/_base.py\", line 420, in run_async\n    coroutine = eval(self.code, globals, locals)\n  File \"program.py\", line 3, in <module>\n    print(f(0))\n          ~^^^\n  File \"program.py\", line 2, in f\n    return 1/n\n           ~^~\nZeroDivisionError: division by zero\n"
+ },
+ "index": {
+  "code": "w = 'КОТ'\nprint(w[3])",
+  "raw": "Traceback (most recent call last):\n  File \"/lib/python314.zip/_pyodide/_base.py\", line 619, in eval_code_async\n    await CodeRunner(\n    ...<10 lines>...\n    .run_async(globals, locals)\n  File \"/lib/python314.zip/_pyodide/_base.py\", line 420, in run_async\n    coroutine = eval(self.code, globals, locals)\n  File \"program.py\", line 2, in <module>\n    print(w[3])\n          ~^^^\nIndexError: string index out of range\n"
+ },
+ "intval": {
+  "code": "print(int('0b101'))",
+  "raw": "Traceback (most recent call last):\n  File \"/lib/python314.zip/_pyodide/_base.py\", line 619, in eval_code_async\n    await CodeRunner(\n    ...<10 lines>...\n    .run_async(globals, locals)\n  File \"/lib/python314.zip/_pyodide/_base.py\", line 420, in run_async\n    coroutine = eval(self.code, globals, locals)\n  File \"program.py\", line 1, in <module>\n    print(int('0b101'))\n          ~~~^^^^^^^^^\nValueError: invalid literal for int() with base 10: '0b101'\n"
+ },
+ "eq": {
+  "code": "x = 3\nif x = 3:\n    print(x)",
+  "raw": "Traceback (most recent call last):\n  File \"/lib/python314.zip/_pyodide/_base.py\", line 619, in eval_code_async\n    await CodeRunner(\n          ~~~~~~~~~~^\n        source,\n        ^^^^^^^\n    ...<6 lines>...\n        dedent=dedent,\n        ^^^^^^^^^^^^^^\n    )\n    ^\n  File \"/lib/python314.zip/_pyodide/_base.py\", line 294, in __init__\n    self.ast = next(self._gen)\n               ~~~~^^^^^^^^^^^\n  File \"/lib/python314.zip/_pyodide/_base.py\", line 151, in _parse_and_compile_gen\n    mod = compile(source, filename, mode, flags | ast.PyCF_ONLY_AST)\n  File \"program.py\", line 2\n    if x = 3:\n       ^^^^^\nSyntaxError: invalid syntax. Maybe you meant '==' or ':=' instead of '='?\n"
+ },
+ "unclosed": {
+  "code": "print((1 + 2)",
+  "raw": "Traceback (most recent call last):\n  File \"/lib/python314.zip/_pyodide/_base.py\", line 619, in eval_code_async\n    await CodeRunner(\n          ~~~~~~~~~~^\n        source,\n        ^^^^^^^\n    ...<6 lines>...\n        dedent=dedent,\n        ^^^^^^^^^^^^^^\n    )\n    ^\n  File \"/lib/python314.zip/_pyodide/_base.py\", line 294, in __init__\n    self.ast = next(self._gen)\n               ~~~~^^^^^^^^^^^\n  File \"/lib/python314.zip/_pyodide/_base.py\", line 151, in _parse_and_compile_gen\n    mod = compile(source, filename, mode, flags | ast.PyCF_ONLY_AST)\n  File \"program.py\", line 1\n    print((1 + 2)\n         ^\nSyntaxError: '(' was never closed\n"
+ },
+ "file": {
+  "code": "f = open('17.txt')",
+  "raw": "Traceback (most recent call last):\n  File \"/lib/python314.zip/_pyodide/_base.py\", line 619, in eval_code_async\n    await CodeRunner(\n    ...<10 lines>...\n    .run_async(globals, locals)\n  File \"/lib/python314.zip/_pyodide/_base.py\", line 420, in run_async\n    coroutine = eval(self.code, globals, locals)\n  File \"program.py\", line 1, in <module>\n    f = open('17.txt')\nFileNotFoundError: [Errno 44] No such file or directory: '17.txt'\n"
+ }
+}
