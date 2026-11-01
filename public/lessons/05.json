@@ -1,0 +1,109 @@
+{
+ "id": "05",
+ "short": "Занятие 05",
+ "title": "Занятие 05 · А5 Вложенные циклы и product",
+ "groups": [
+  {
+   "id": "class-py",
+   "title": "На занятии · Python А5",
+   "tasks": [
+    {
+     "id": "c-a5-1",
+     "label": "А5 · 1",
+     "kind": "predict",
+     "topic": "Предскажи вывод",
+     "level": 1,
+     "statement": "Что напечатает программа? Сначала запиши ответ, потом запусти.\n\n```python\nfor a in 'АБ':\n    for b in 'ВГ':\n        print(a + b)\n```",
+     "starter": "for a in 'АБ':\n    for b in 'ВГ':\n        print(a + b)\n"
+    },
+    {
+     "id": "c-a5-2",
+     "label": "А5 · 2",
+     "kind": "predict",
+     "topic": "Предскажи вывод",
+     "level": 1,
+     "statement": "Что напечатает программа? Сначала запиши ответ, потом запусти.\n\n```python\ncnt = 0\nfor a in 'АБВ':\n    for b in 'АБВ':\n        if a != b:\n            cnt += 1\nprint(cnt)\n```",
+     "starter": "cnt = 0\nfor a in 'АБВ':\n    for b in 'АБВ':\n        if a != b:\n            cnt += 1\nprint(cnt)\n"
+    },
+    {
+     "id": "c-a5-3",
+     "label": "А5 · 3",
+     "kind": "predict",
+     "topic": "Предскажи вывод",
+     "level": 1,
+     "statement": "Что напечатает программа? Сначала запиши ответ, потом запусти.\n\n```python\nfrom itertools import product\nfor w in product('01', repeat=2):\n    print(w, ''.join(w))\n```",
+     "starter": "from itertools import product\nfor w in product('01', repeat=2):\n    print(w, ''.join(w))\n"
+    },
+    {
+     "id": "c-a5-4",
+     "label": "А5 · 4",
+     "kind": "predict",
+     "topic": "Предскажи вывод",
+     "level": 1,
+     "statement": "Что напечатает программа? Сначала запиши ответ, потом запусти.\n\n```python\nfrom itertools import product\nprint(len(list(product('АБВГ', repeat=3))))\n```",
+     "starter": "from itertools import product\nprint(len(list(product('АБВГ', repeat=3))))\n"
+    },
+    {
+     "id": "c-a5-5",
+     "label": "А5 · 5",
+     "kind": "bug",
+     "topic": "Найди ошибку",
+     "level": 1,
+     "statement": "По условию №8 первое слово должно быть ЛЛЛ, а печатается ТТТ. Почему?\n\n```python\nfrom itertools import product\nfor w in product('ТОЛ', repeat=3):\n    print(''.join(w))\n    break\n```",
+     "starter": "from itertools import product\nfor w in product('ТОЛ', repeat=3):\n    print(''.join(w))\n    break\n"
+    },
+    {
+     "id": "c-a5-6",
+     "label": "А5 · 6",
+     "kind": "make",
+     "topic": "Напиши сам",
+     "level": 1,
+     "statement": "№2 кодом: для всех x, y из {0, 1} напечатай x, y и значение (x → y), то есть `(not x) or y`.",
+     "starter": "from itertools import product\nfor x, y in product([0, 1], repeat=___):\n    print(x, y, int(___))\n"
+    }
+   ]
+  },
+  {
+   "id": "home-py",
+   "title": "Дома · Python А5",
+   "tasks": [
+    {
+     "id": "h-a5-1",
+     "label": "А5 · 1",
+     "kind": "predict",
+     "topic": "Предскажи вывод",
+     "level": 1,
+     "statement": "Что напечатает программа? Сначала запиши ответ, потом запусти.\n\n```python\nfor a in 'XY':\n    for b in '12':\n        print(a + b)\n```",
+     "starter": "for a in 'XY':\n    for b in '12':\n        print(a + b)\n"
+    },
+    {
+     "id": "h-a5-2",
+     "label": "А5 · 2",
+     "kind": "predict",
+     "topic": "Предскажи вывод",
+     "level": 1,
+     "statement": "Что напечатает программа? Сначала запиши ответ, потом запусти.\n\n```python\ncnt = 0\nfor a in 'АБВГ':\n    for b in 'АБВГ':\n        if a < b:\n            cnt += 1\nprint(cnt)\n```",
+     "starter": "cnt = 0\nfor a in 'АБВГ':\n    for b in 'АБВГ':\n        if a < b:\n            cnt += 1\nprint(cnt)\n"
+    },
+    {
+     "id": "h-a5-3",
+     "label": "А5 · 3",
+     "kind": "make",
+     "topic": "Напиши сам",
+     "level": 1,
+     "statement": "Сколько пятибуквенных слов из букв Е, Г, Э содержат ровно одну Э? (product)",
+     "starter": "\n"
+    },
+    {
+     "id": "h-a5-4",
+     "label": "А5 · 4",
+     "kind": "make",
+     "topic": "Напиши сам",
+     "level": 1,
+     "statement": "Перепиши «взломщика» из трёх циклов одной строкой product и проверь, что пароль ТОК снова 22.",
+     "starter": "\n"
+    }
+   ]
+  }
+ ]
+}

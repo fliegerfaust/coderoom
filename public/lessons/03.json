@@ -1,0 +1,109 @@
+{
+ "id": "03",
+ "short": "Занятие 03",
+ "title": "Занятие 03 · А3 Условия if",
+ "groups": [
+  {
+   "id": "class-py",
+   "title": "На занятии · Python А3",
+   "tasks": [
+    {
+     "id": "c-a3-1",
+     "label": "А3 · 1",
+     "kind": "predict",
+     "topic": "Предскажи вывод",
+     "level": 1,
+     "statement": "Что напечатает программа? Сначала запиши ответ, потом запусти.\n\n```python\nhp = 0\nif hp > 0:\n    print('жив')\nelse:\n    print('GAME OVER')\n```",
+     "starter": "hp = 0\nif hp > 0:\n    print('жив')\nelse:\n    print('GAME OVER')\n"
+    },
+    {
+     "id": "c-a3-2",
+     "label": "А3 · 2",
+     "kind": "predict",
+     "topic": "Предскажи вывод",
+     "level": 1,
+     "statement": "Что напечатает программа? Сначала запиши ответ, потом запусти.\n\n```python\nw = 'ЛОТУ'\nprint(w[0] != 'Л' and 'У' in w)\nprint(w[0] != 'Л' or 'У' in w)\n```",
+     "starter": "w = 'ЛОТУ'\nprint(w[0] != 'Л' and 'У' in w)\nprint(w[0] != 'Л' or 'У' in w)\n"
+    },
+    {
+     "id": "c-a3-3",
+     "label": "А3 · 3",
+     "kind": "predict",
+     "topic": "Предскажи вывод",
+     "level": 1,
+     "statement": "Что напечатает программа? Сначала запиши ответ, потом запусти.\n\n```python\nscore = 73\nif score >= 80:\n    print('A')\nelif score >= 60:\n    print('B')\nelse:\n    print('C')\n```",
+     "starter": "score = 73\nif score >= 80:\n    print('A')\nelif score >= 60:\n    print('B')\nelse:\n    print('C')\n"
+    },
+    {
+     "id": "c-a3-4",
+     "label": "А3 · 4",
+     "kind": "predict",
+     "topic": "Предскажи вывод",
+     "level": 1,
+     "statement": "Что напечатает программа? Сначала запиши ответ, потом запусти.\n\n```python\nx, y = 1, 0\nprint(int((not x) or y), int(x and not y))\n```",
+     "starter": "x, y = 1, 0\nprint(int((not x) or y), int(x and not y))\n"
+    },
+    {
+     "id": "c-a3-5",
+     "label": "А3 · 5",
+     "kind": "bug",
+     "topic": "Найди ошибку",
+     "level": 1,
+     "statement": "Python не запускает этот код. Найди две ошибки.\n\n```python\nx = 5\nif x = 5\n    print('пять')\n```",
+     "starter": "x = 5\nif x = 5\n    print('пять')\n"
+    },
+    {
+     "id": "c-a3-6",
+     "label": "А3 · 6",
+     "kind": "make",
+     "topic": "Напиши сам",
+     "level": 1,
+     "statement": "Слово ТОЛУ: проверь «не начинается с Л и содержит ровно одну У». Должно быть True.",
+     "starter": "w = 'ТОЛУ'\nprint(___)\n"
+    }
+   ]
+  },
+  {
+   "id": "home-py",
+   "title": "Дома · Python А3",
+   "tasks": [
+    {
+     "id": "h-a3-1",
+     "label": "А3 · 1",
+     "kind": "predict",
+     "topic": "Предскажи вывод",
+     "level": 1,
+     "statement": "Что напечатает программа? Сначала запиши ответ, потом запусти.\n\n```python\na = 7\nif a % 2 == 0:\n    print('чёт')\nelse:\n    print('нечет')\n```",
+     "starter": "a = 7\nif a % 2 == 0:\n    print('чёт')\nelse:\n    print('нечет')\n"
+    },
+    {
+     "id": "h-a3-2",
+     "label": "А3 · 2",
+     "kind": "predict",
+     "topic": "Предскажи вывод",
+     "level": 1,
+     "statement": "Что напечатает программа? Сначала запиши ответ, потом запусти.\n\n```python\nprint(5 > 3 and 2 > 4, 5 > 3 or 2 > 4)\n```",
+     "starter": "print(5 > 3 and 2 > 4, 5 > 3 or 2 > 4)\n"
+    },
+    {
+     "id": "h-a3-3",
+     "label": "А3 · 3",
+     "kind": "bug",
+     "topic": "Найди ошибку",
+     "level": 1,
+     "statement": "Проверка «x от 3 до 10» не запускается.\n\n```python\nx = 7\nprint(x > 3 and < 10)\n```",
+     "starter": "x = 7\nprint(x > 3 and < 10)\n"
+    },
+    {
+     "id": "h-a3-4",
+     "label": "А3 · 4",
+     "kind": "make",
+     "topic": "Напиши сам",
+     "level": 1,
+     "statement": "Слово РОБОТ: «начинается с согласной и содержит ровно две О»?",
+     "starter": "\n"
+    }
+   ]
+  }
+ ]
+}

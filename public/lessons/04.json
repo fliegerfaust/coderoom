@@ -1,0 +1,109 @@
+{
+ "id": "04",
+ "short": "Занятие 04",
+ "title": "Занятие 04 · А4 Цикл for",
+ "groups": [
+  {
+   "id": "class-py",
+   "title": "На занятии · Python А4",
+   "tasks": [
+    {
+     "id": "c-a4-1",
+     "label": "А4 · 1",
+     "kind": "predict",
+     "topic": "Предскажи вывод",
+     "level": 1,
+     "statement": "Что напечатает программа? Сначала запиши ответ, потом запусти.\n\n```python\nfor ch in 'ЕГЭ':\n    print(ch)\n```",
+     "starter": "for ch in 'ЕГЭ':\n    print(ch)\n"
+    },
+    {
+     "id": "c-a4-2",
+     "label": "А4 · 2",
+     "kind": "predict",
+     "topic": "Предскажи вывод",
+     "level": 1,
+     "statement": "Что напечатает программа? Сначала запиши ответ, потом запусти.\n\n```python\ns = 0\nfor i in range(1, 6):\n    s += i\nprint(s)\n```",
+     "starter": "s = 0\nfor i in range(1, 6):\n    s += i\nprint(s)\n"
+    },
+    {
+     "id": "c-a4-3",
+     "label": "А4 · 3",
+     "kind": "predict",
+     "topic": "Предскажи вывод",
+     "level": 1,
+     "statement": "Что напечатает программа? Сначала запиши ответ, потом запусти.\n\n```python\ncnt = 0\nfor ch in 'АБРАКАДАБРА':\n    if ch == 'А':\n        cnt += 1\nprint(cnt)\n```",
+     "starter": "cnt = 0\nfor ch in 'АБРАКАДАБРА':\n    if ch == 'А':\n        cnt += 1\nprint(cnt)\n"
+    },
+    {
+     "id": "c-a4-4",
+     "label": "А4 · 4",
+     "kind": "predict",
+     "topic": "Предскажи вывод",
+     "level": 1,
+     "statement": "Что напечатает программа? Сначала запиши ответ, потом запусти.\n\n```python\nfor i in range(1, 4):\n    print('*' * i)\n```",
+     "starter": "for i in range(1, 4):\n    print('*' * i)\n"
+    },
+    {
+     "id": "c-a4-5",
+     "label": "А4 · 5",
+     "kind": "bug",
+     "topic": "Найди ошибку",
+     "level": 1,
+     "statement": "Хотели одну итоговую сумму, а печатается пять чисел. Что не так?\n\n```python\ns = 0\nfor i in range(1, 6):\n    s += i\n    print(s)\n```",
+     "starter": "s = 0\nfor i in range(1, 6):\n    s += i\n    print(s)\n"
+    },
+    {
+     "id": "c-a4-6",
+     "label": "А4 · 6",
+     "kind": "make",
+     "topic": "Напиши сам",
+     "level": 1,
+     "statement": "Сколько чисел от 1 до 100 нечётные и делятся на 7?",
+     "starter": "cnt = 0\nfor x in range(___, ___):\n    if ___:\n        cnt += 1\nprint(cnt)\n"
+    }
+   ]
+  },
+  {
+   "id": "home-py",
+   "title": "Дома · Python А4",
+   "tasks": [
+    {
+     "id": "h-a4-1",
+     "label": "А4 · 1",
+     "kind": "predict",
+     "topic": "Предскажи вывод",
+     "level": 1,
+     "statement": "Что напечатает программа? Сначала запиши ответ, потом запусти.\n\n```python\nfor i in range(3):\n    print(i)\n```",
+     "starter": "for i in range(3):\n    print(i)\n"
+    },
+    {
+     "id": "h-a4-2",
+     "label": "А4 · 2",
+     "kind": "predict",
+     "topic": "Предскажи вывод",
+     "level": 1,
+     "statement": "Что напечатает программа? Сначала запиши ответ, потом запусти.\n\n```python\ns = 0\nfor ch in 'АБВ':\n    s += 1\nprint(s)\n```",
+     "starter": "s = 0\nfor ch in 'АБВ':\n    s += 1\nprint(s)\n"
+    },
+    {
+     "id": "h-a4-3",
+     "label": "А4 · 3",
+     "kind": "bug",
+     "topic": "Найди ошибку",
+     "level": 1,
+     "statement": "Нужна сумма чисел от 1 до 10 (это 55), а выходит 45.\n\n```python\ns = 0\nfor i in range(1, 10):\n    s += i\nprint(s)\n```",
+     "starter": "s = 0\nfor i in range(1, 10):\n    s += i\nprint(s)\n"
+    },
+    {
+     "id": "h-a4-4",
+     "label": "А4 · 4",
+     "kind": "make",
+     "topic": "Напиши сам",
+     "level": 1,
+     "statement": "Сумма всех чисел от 1 до 100, которые делятся на 3.",
+     "starter": "\n"
+    }
+   ]
+  }
+ ]
+}

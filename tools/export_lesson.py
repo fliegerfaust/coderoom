@@ -5,7 +5,13 @@
 Сюда уходят только условие, картинка, файлы и заготовка. **Ответов и разборов нет**: сайт публичный.
 
     python3 tools/export_lesson.py --inf ~/Teaching/informatics --out public/lessons 01
+    python3 tools/export_lesson.py --inf ~/Teaching/informatics --out public/lessons --all
 
+Что попадает в занятие:
+  · Python-часть — задачи атома занятия (atoms.py) «На занятии» и его домашняя тренировка «Дома»;
+  · ЕГЭ-часть — если в «Занятие NN …/Исходники/» есть room_tasks.py: списки CLASS и HOME задач
+    в формате tasks_*.py (ref, ege, lvl, topic, st, img_name, files), необязательно HEAD — общее
+    вступление, которое сворачивается. Занятие 01 берёт ЕГЭ из занятия 00 (№10 «Твой роутер»).
 Правка JSON руками затирается следующим экспортом.
 """
 import argparse
@@ -98,15 +104,67 @@ def lesson_01(inf, out):
             "groups": groups}
 
 
-LESSONS = {"01": lesson_01}
+# занятие → атом (как в «Азы Python/Исходники/make_lessons.py»)
+LESSON_ATOM = {"02": "А2", "03": "А3", "04": "А4", "05": "А5", "06": "А6", "07": "А7", "08": "А8", "09": "А9", "11": "А10"}
+
+
+def lesson_folder(inf, lid):
+    for name in sorted(os.listdir(inf)):
+        if name.startswith("Занятие " + lid + " ") or name.startswith("Занятие " + lid + "–"):
+            return os.path.join(inf, name)
+    return None
+
+
+def lesson_atom(lid):
+    def build(inf, out):
+        stub_playwright()
+        sys.path.insert(0, os.path.join(inf, "Азы Python", "Исходники"))
+        import atoms
+        atoms.check()
+        aid = LESSON_ATOM[lid]
+        a = [x for x in atoms.ATOMS if x["id"] == aid][0]
+        folder = lesson_folder(inf, lid)
+        groups = [{"id": "class-py", "title": "На занятии · Python " + aid,
+                   "tasks": [atom_task(aid, i + 1, t, "c") for i, t in enumerate(a["tasks"])]}]
+        ege_class, ege_home = [], []
+        src = os.path.join(folder, "Исходники") if folder else None
+        if src and os.path.exists(os.path.join(src, "room_tasks.py")):
+            sys.path.insert(0, src)
+            import importlib
+            rt = importlib.import_module("room_tasks")
+            head = getattr(rt, "HEAD", "")
+            img = os.path.join(src, "картинки")
+            ege_class = [ege_task(t, "c", head, img, os.path.join(out, "img"), src) for t in rt.CLASS]
+            ege_home = [ege_task(t, "h", head, img, os.path.join(out, "img"), src) for t in getattr(rt, "HOME", [])]
+            sys.path.remove(src); sys.modules.pop("room_tasks", None)
+        nums = lambda ts: ", ".join("№" + n for n in sorted({t["ege"] for t in ts}, key=lambda x: int(x) if x.isdigit() else 99))
+        if ege_class:
+            groups.append({"id": "class-ege", "title": "На занятии · ЕГЭ " + nums(ege_class), "tasks": ege_class})
+        hw = atoms.HW.get(aid, [])
+        if hw:
+            groups.append({"id": "home-py", "title": "Дома · Python " + aid,
+                           "tasks": [atom_task(aid, i + 1, t, "h") for i, t in enumerate(hw)]})
+        if ege_home:
+            groups.append({"id": "home-ege", "title": "Дома · ЕГЭ " + nums(ege_home), "tasks": ege_home})
+        name = os.path.basename(folder) if folder else "Занятие %s · %s %s" % (lid, aid, a["title"])
+        return {"id": lid, "short": "Занятие " + lid, "title": name.replace("Занятие 09–10", "Занятие 09"), "groups": groups}
+    return build
+
+
+LESSONS = {"01": lesson_01, **{lid: lesson_atom(lid) for lid in LESSON_ATOM}}
 
 
 def main():
     ap = argparse.ArgumentParser()
     ap.add_argument("--inf", required=True, help="папка Teaching/informatics")
     ap.add_argument("--out", default="public/lessons")
-    ap.add_argument("ids", nargs="+")
+    ap.add_argument("--all", action="store_true", help="все занятия, которые умеем собирать")
+    ap.add_argument("ids", nargs="*")
     a = ap.parse_args()
+    if a.all:
+        a.ids = sorted(LESSONS)
+    if not a.ids:
+        ap.error("укажи номера занятий или --all")
     os.makedirs(a.out, exist_ok=True)
     idx_path = os.path.join(a.out, "index.json")
     index = json.load(open(idx_path, encoding="utf-8")) if os.path.exists(idx_path) else []
