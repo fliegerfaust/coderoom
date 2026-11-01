@@ -1,0 +1,269 @@
+<title>Витрина кодовой комнаты</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500;700&display=swap">
+<style>
+/* Витрина: три раскладки комнаты на задаче №10 · Б4 занятия 01, кадр 1440×860, под каждой — чем лучше и чем платит */
+:root {
+  --ground: #F6F5F4;      /* фон ДенВал */
+  --paper: #FFFFFF;
+  --ink: #141414;
+  --ink-2: #4A4743;
+  --ink-3: #8A857F;
+  --line: #E4E1DD;
+  --violet: #7C3AED;      /* одна залитая кнопка на экране — «Запустить» */
+  --violet-soft: #EFE7FD;
+  --lime: #CDEB00;        /* маркер-подчёркивание ДенВал */
+  --teacher: #7C3AED;
+  --student: #0F8A5F;
+  --student-soft: #DDF3EA;
+  --out-bg: #FBFAF8;
+  --syn-keyword: #7C3AED; --syn-string: #0F7B56; --syn-number: #B4470C; --syn-comment: #8A857F; --syn-fn: #1C5FB8; --syn-punct: #4A4743;
+  --f-ui: "Manrope", "Segoe UI", system-ui, sans-serif;
+  --f-code: "JetBrains Mono", "SF Mono", Menlo, Consolas, monospace;
+  color-scheme: light;
+}
+@media (prefers-color-scheme: dark) { :root:not([data-theme="light"]) {
+  --ground: #181716; --paper: #211F1D; --ink: #F3F1EE; --ink-2: #C9C4BD; --ink-3: #8E8880; --line: #34312E;
+  --violet: #9B6BFF; --violet-soft: #2D2343; --lime: #CDEB00; --teacher: #A98BFF; --student: #3CC48D; --student-soft: #173A2C;
+  --out-bg: #1B1A18; --syn-keyword: #B79CFF; --syn-string: #5FD3A1; --syn-number: #F0A15E; --syn-comment: #8E8880; --syn-fn: #7FB2FF; --syn-punct: #C9C4BD;
+  color-scheme: dark; } }
+:root[data-theme="dark"] {
+  --ground: #181716; --paper: #211F1D; --ink: #F3F1EE; --ink-2: #C9C4BD; --ink-3: #8E8880; --line: #34312E;
+  --violet: #9B6BFF; --violet-soft: #2D2343; --lime: #CDEB00; --teacher: #A98BFF; --student: #3CC48D; --student-soft: #173A2C;
+  --out-bg: #1B1A18; --syn-keyword: #B79CFF; --syn-string: #5FD3A1; --syn-number: #F0A15E; --syn-comment: #8E8880; --syn-fn: #7FB2FF; --syn-punct: #C9C4BD;
+  color-scheme: dark; }
+
+* { box-sizing: border-box; }
+body { background: var(--ground); color: var(--ink); font-family: var(--f-ui); margin: 0;
+  padding-left: max(16px, env(safe-area-inset-left, 0px)); padding-right: max(16px, env(safe-area-inset-right, 0px)); padding-block: 32px 64px; }
+::selection { background: color-mix(in srgb, var(--lime) 70%, transparent); color: #141414; }
+.page { max-width: 1240px; margin: 0 auto; display: grid; gap: 48px; }
+.intro h1 { font-size: clamp(26px, 3.4vw, 40px); font-weight: 800; letter-spacing: -0.02em; margin: 0 0 12px; text-wrap: balance; }
+.mark { background: linear-gradient(transparent 62%, var(--lime) 62%, var(--lime) 92%, transparent 92%); padding: 0 2px; }
+.intro p { max-width: 68ch; margin: 0; color: var(--ink-2); font-size: 16px; line-height: 1.55; }
+.variant { display: grid; gap: 16px; }
+.vhead { display: flex; align-items: baseline; gap: 14px; flex-wrap: wrap; }
+.vhead .letter { font-size: 15px; font-weight: 800; color: var(--paper); background: var(--ink); width: 30px; height: 30px; border-radius: 8px; display: inline-grid; place-items: center; }
+.vhead h2 { margin: 0; font-size: 24px; font-weight: 800; letter-spacing: -0.01em; }
+.vhead .tag { font-size: 12px; font-weight: 700; color: var(--violet); background: var(--violet-soft); padding: 4px 10px; border-radius: 999px; }
+.frame { position: relative; width: 100%; aspect-ratio: 1440 / 860; border-radius: 14px; overflow: hidden; border: 1px solid var(--line); box-shadow: 0 18px 40px -24px rgba(20,20,20,.35); background: var(--ground); max-width: 100%; }
+.frame > .screen { position: absolute; left: 0; top: 0; width: 1440px; height: 860px; transform-origin: 0 0; }
+.notes { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; }
+.notes div { min-width: 0; }
+.notes h3 { margin: 0 0 6px; font-size: 13px; font-weight: 800; letter-spacing: .04em; text-transform: uppercase; color: var(--ink-3); }
+.notes p { margin: 0; font-size: 15px; line-height: 1.55; color: var(--ink-2); max-width: 60ch; }
+@media (max-width: 720px) { .notes { grid-template-columns: 1fr; } }
+
+/* ── экран комнаты (общие детали всех трёх) ───────────────────── */
+.screen { font-family: var(--f-ui); color: var(--ink); background: var(--ground); display: grid; }
+.bar { height: 60px; display: flex; align-items: center; gap: 18px; padding: 0 24px; background: var(--paper); border-bottom: 1px solid var(--line); }
+.logo { display: flex; align-items: center; gap: 10px; font-weight: 800; font-size: 17px; letter-spacing: -0.01em; }
+.logo i { width: 28px; height: 28px; border-radius: 8px; background: var(--ink); display: grid; place-items: center; color: var(--lime); font-style: normal; font-family: var(--f-code); font-size: 13px; font-weight: 700; }
+.lesson { font-size: 14px; color: var(--ink-2); font-weight: 600; }
+.sp { flex: 1; }
+.who { display: flex; gap: 8px; }
+.pill { display: inline-flex; align-items: center; gap: 8px; height: 32px; padding: 0 12px 0 6px; border-radius: 999px; background: var(--ground); font-size: 13px; font-weight: 700; }
+.pill b { width: 22px; height: 22px; border-radius: 50%; display: grid; place-items: center; color: #fff; font-size: 11px; }
+.pill.t b { background: var(--teacher); } .pill.s b { background: var(--student); }
+.pill small { font-weight: 600; color: var(--ink-3); }
+.typing { width: 6px; height: 6px; border-radius: 50%; background: var(--student); box-shadow: 0 0 0 3px var(--student-soft); }
+.btn { height: 40px; padding: 0 16px; border-radius: 10px; border: 1px solid var(--line); background: var(--paper); font: 700 14px var(--f-ui); color: var(--ink); display: inline-flex; align-items: center; gap: 8px; }
+.btn svg { width: 16px; height: 16px; }
+.btn.run { background: var(--violet); color: #fff; border-color: transparent; padding: 0 20px 0 16px; }
+.btn.run kbd { font: 600 11px var(--f-code); opacity: .75; margin-left: 4px; }
+.btn.ghost { border-color: transparent; background: transparent; color: var(--ink-2); }
+.chip { height: 30px; padding: 0 11px; border-radius: 8px; font: 700 13px var(--f-ui); display: inline-flex; align-items: center; color: var(--ink-2); background: transparent; border: 1px solid transparent; white-space: nowrap; }
+.chip.on { background: var(--ink); color: var(--paper); }
+.chip.done { color: var(--ink-3); }
+.chip.done::after { content: ""; width: 6px; height: 6px; border-radius: 50%; background: var(--student); margin-left: 6px; }
+.label { font: 800 13px var(--f-ui); color: var(--ink-3); letter-spacing: .02em; }
+.st { font-size: 20px; line-height: 1.55; margin: 0; max-width: 62ch; }
+.st code, .intro-t code { font: 500 .9em var(--f-code); background: var(--ground); padding: 1px 5px; border-radius: 5px; }
+.intro-t { font-size: 15px; line-height: 1.55; color: var(--ink-2); margin: 0; max-width: 70ch; }
+.disclose { display: inline-flex; align-items: center; gap: 6px; font: 700 14px var(--f-ui); color: var(--ink-2); }
+.disclose svg { width: 14px; height: 14px; }
+.h-task { font-size: 30px; font-weight: 800; letter-spacing: -0.02em; margin: 0; }
+
+/* редактор: полоса авторства слева от номера строки — подпись движения «видно, кто что пишет» */
+.ed { background: var(--paper); font-family: var(--f-code); font-size: 21px; line-height: 1.75; padding: 18px 0; overflow: hidden; position: relative; }
+.ln { display: grid; grid-template-columns: 6px 54px 1fr; align-items: center; min-height: 1.75em; position: relative; }
+.ln .who-bar { height: 100%; }
+.ln.t .who-bar { background: var(--teacher); } .ln.s .who-bar { background: var(--student); }
+.ln .n { color: var(--ink-3); font-size: 15px; text-align: right; padding-right: 18px; font-variant-numeric: tabular-nums; }
+.ln .c { white-space: pre; padding-right: 20px; }
+.ln.active { background: color-mix(in srgb, var(--ground) 70%, transparent); }
+.k { color: var(--syn-keyword); font-weight: 600; } .s { color: var(--syn-string); } .m { color: var(--syn-number); } .cm { color: var(--syn-comment); font-style: italic; } .f { color: var(--syn-fn); } .p { color: var(--syn-punct); }
+.caret { display: inline-block; width: 2px; height: 1.2em; vertical-align: -0.22em; position: relative; }
+.caret.t { background: var(--teacher); } .caret.s { background: var(--student); }
+.caret span { position: absolute; left: -1px; bottom: 100%; font: 700 12px var(--f-ui); color: #fff; padding: 2px 7px; border-radius: 6px 6px 6px 0; white-space: nowrap; }
+.caret.t span { background: var(--teacher); } .caret.s span { background: var(--student); }
+.edhead { height: 52px; display: flex; align-items: center; gap: 12px; padding: 0 16px 0 20px; background: var(--paper); border-bottom: 1px solid var(--line); }
+.legend { display: flex; gap: 14px; font-size: 13px; font-weight: 700; color: var(--ink-2); }
+.legend span { display: inline-flex; align-items: center; gap: 6px; }
+.legend i { width: 10px; height: 10px; border-radius: 3px; }
+
+.out { background: var(--out-bg); display: grid; grid-template-rows: auto 1fr; min-height: 0; }
+.outhead { height: 52px; display: flex; align-items: center; gap: 10px; padding: 0 18px; border-bottom: 1px solid var(--line); font-size: 14px; font-weight: 700; }
+.ok { display: inline-flex; align-items: center; gap: 6px; color: var(--student); }
+.ok i { width: 8px; height: 8px; border-radius: 50%; background: var(--student); }
+.outhead small { color: var(--ink-3); font-weight: 600; }
+.outbody { font: 400 20px/1.7 var(--f-code); padding: 16px 20px; white-space: pre; color: var(--ink); }
+.outbody .last { background: linear-gradient(transparent 60%, color-mix(in srgb, var(--lime) 75%, transparent) 60%); }
+.stdin { border-top: 1px solid var(--line); padding: 10px 18px; font-size: 13px; color: var(--ink-3); font-weight: 600; display: flex; gap: 8px; align-items: center; }
+
+/* ── A · Сцена ─────────────────────────────────────────────────── */
+.A { grid-template-rows: 60px auto 1fr; }
+.A .taskband { background: var(--paper); border-bottom: 1px solid var(--line); padding: 22px 28px 20px; display: grid; grid-template-columns: auto 1fr auto; gap: 28px; align-items: start; }
+.A .nav { display: flex; gap: 6px; align-items: center; }
+.A .nav .btn { width: 40px; padding: 0; justify-content: center; }
+.A .tlabel { display: grid; gap: 4px; }
+.A .work { display: grid; grid-template-columns: 1fr 470px; min-height: 0; }
+.A .left { display: grid; grid-template-rows: 52px 1fr; min-height: 0; border-right: 1px solid var(--line); }
+.A .dots { display: flex; gap: 4px; align-items: center; }
+.A .dots i { width: 22px; height: 6px; border-radius: 3px; background: var(--line); }
+.A .dots i.on { background: var(--ink); width: 34px; }
+.A .dots i.dn { background: var(--student); }
+.A .dots em { width: 10px; }
+
+/* ── B · Карточка с доски ─────────────────────────────────────── */
+.B { grid-template-rows: 60px 1fr; }
+.B .work { display: grid; grid-template-columns: 470px 1fr; min-height: 0; }
+.B .side { padding: 22px; display: grid; grid-template-rows: auto auto 1fr; gap: 16px; min-height: 0; border-right: 1px solid var(--line); }
+.B .stack { display: flex; gap: 6px; flex-wrap: wrap; }
+.B .stacktitle { display: flex; align-items: center; justify-content: space-between; }
+.B .card { background: var(--paper); border-radius: 18px; padding: 26px 26px 22px; display: grid; gap: 16px; align-content: start; box-shadow: 0 1px 0 var(--line), 0 14px 30px -22px rgba(20,20,20,.35); }
+.B .card .top { display: flex; align-items: center; gap: 10px; }
+.B .badge { font: 800 13px var(--f-ui); background: var(--ink); color: var(--lime); padding: 5px 10px; border-radius: 7px; }
+.B .lvl { font-size: 13px; font-weight: 700; color: var(--ink-3); }
+.B .st { font-size: 19px; }
+.B .card .foot { display: flex; justify-content: space-between; border-top: 1px solid var(--line); padding-top: 14px; }
+.B .main { display: grid; grid-template-rows: 52px 1fr 290px; min-height: 0; }
+.B .main .out { border-top: 1px solid var(--line); }
+
+/* ── C · Два голоса ───────────────────────────────────────────── */
+.C { grid-template-rows: 60px 1fr; }
+.C .work { display: grid; grid-template-columns: 1fr 420px; min-height: 0; }
+.C .center { display: grid; grid-template-rows: auto 1fr; min-height: 0; border-right: 1px solid var(--line); }
+.C .strip { background: var(--paper); border-bottom: 1px solid var(--line); padding: 16px 24px; display: grid; grid-template-columns: auto 1fr auto; gap: 18px; align-items: center; }
+.C .strip .st { font-size: 17px; max-width: none; display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden; }
+.C .ed { font-size: 23px; }
+.C .ed .ln { grid-template-columns: 112px 54px 1fr; }
+.C .who-tag { font: 700 12px var(--f-ui); padding-left: 16px; display: flex; align-items: center; gap: 6px; height: 100%; }
+.C .ln.t .who-tag { color: var(--teacher); background: color-mix(in srgb, var(--teacher) 9%, transparent); }
+.C .ln.s .who-tag { color: var(--student); background: color-mix(in srgb, var(--student) 10%, transparent); }
+.C .ln .who-bar { display: none; }
+.C .rightcol { display: grid; grid-template-rows: auto 1fr; min-height: 0; }
+.C .runbox { padding: 18px; background: var(--paper); border-bottom: 1px solid var(--line); display: grid; gap: 12px; }
+.C .runbox .btn.run { height: 52px; font-size: 16px; justify-content: center; }
+.C .runbox .row { display: flex; gap: 8px; }
+.C .runbox .row .btn { flex: 1; justify-content: center; }
+</style>
+
+<main class="page">
+  <section class="intro">
+    <h1>Кодовая комната: <span class="mark">три раскладки</span> на выбор</h1>
+    <p>Одна и та же задача занятия 01 (№10 · Б4 «Твой роутер») в трёх раскладках. Вы с Аршаком пишете вместе: у каждой строки слева полоска того, кто её написал, а курсор подписан именем. Запустил Аршак, вывод видят оба. Выберите раскладку, и я соберу по ней боевую комнату.</p>
+  </section>
+  <div id="variants"></div>
+</main>
+
+<script>
+const TASK = {
+  label: '№10 · Б4', topic: 'Маска · адрес сети', level: 'База',
+  intro: 'В терминологии сетей TCP/IP маской сети называют двоичное число, которое показывает, какая часть IP-адреса узла сети относится к адресу сети, а какая — к адресу узла в этой сети. Адрес сети получается в результате применения поразрядной конъюнкции к заданному адресу узла и его маске.',
+  st: 'Даны адрес узла <code>172.16.200.17</code> и маска <code>255.255.224.0</code>. Найдите адрес сети. В ответе укажите сумму числовых значений октетов найденного IP-адреса. Например, если бы найденный адрес был равен 100.20.3.4, то в ответе следовало бы записать: 127.',
+};
+const STACKS = [
+  ['На занятии · Python А1', ['1','2','3','4','5','6','7','8'], 8],
+  ['На занятии · ЕГЭ №10', ['Б4','Б5','Б6','Н3','Н4','В3','В4'], 0],
+];
+// код задачи: [автор, html строки]; t — Денис, s — Аршак, '' — заготовка
+const CODE = [
+  ['', '<span class="cm"># №10: пиши решение здесь</span>'],
+  ['t', '<span class="f">print</span><span class="p">(</span><span class="f">bin</span><span class="p">(</span><span class="m">200</span><span class="p">),</span> <span class="f">bin</span><span class="p">(</span><span class="m">224</span><span class="p">))</span><CT>'],
+  ['s', '<span class="f">print</span><span class="p">(</span><span class="m">200</span> <span class="p">&amp;</span> <span class="m">224</span><span class="p">)</span>'],
+  ['s', '<span class="f">print</span><span class="p">(</span><span class="m">172</span> <span class="p">+</span> <span class="m">16</span> <span class="p">+</span> <span class="p">(</span><span class="m">200</span> <span class="p">&amp;</span> <span class="m">224</span><span class="p">)</span> <span class="p">+</span> <span class="m">0</span><span class="p">)</span><CS>'],
+];
+const OUT = '0b11001000 0b11100000\n192\n<span class="last">380</span>';
+const ic = {
+  play: '<svg viewBox="0 0 16 16" fill="currentColor"><path d="M4.5 2.8v10.4a.6.6 0 0 0 .9.5l8.3-5.2a.6.6 0 0 0 0-1L5.4 2.3a.6.6 0 0 0-.9.5z"/></svg>',
+  stop: '<svg viewBox="0 0 16 16" fill="currentColor"><rect x="3.5" y="3.5" width="9" height="9" rx="1.5"/></svg>',
+  left: '<svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M10 3.5 5.5 8l4.5 4.5"/></svg>',
+  right: '<svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M6 3.5 10.5 8 6 12.5"/></svg>',
+  down: '<svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M3.5 6 8 10.5 12.5 6"/></svg>',
+  undo: '<svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M5.5 4 2.5 7l3 3"/><path d="M2.5 7h7a4 4 0 0 1 0 8H8"/></svg>',
+  list: '<svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"><path d="M5.5 4h8M5.5 8h8M5.5 12h8"/><circle cx="2.5" cy="4" r=".8" fill="currentColor"/><circle cx="2.5" cy="8" r=".8" fill="currentColor"/><circle cx="2.5" cy="12" r=".8" fill="currentColor"/></svg>',
+};
+const caretT = '<span class="caret t"><span>Денис</span></span>';
+const caretS = '<span class="caret s"><span>Аршак · пишет</span></span>';
+const editor = (tags) => `<div class="ed">${CODE.map(([a, h], i) =>
+  `<div class="ln ${a} ${i === 3 ? 'active' : ''}"><span class="who-bar"></span>${tags ? `<span class="who-tag">${a === 't' ? 'Денис' : a === 's' ? 'Аршак' : ''}</span>` : ''}<span class="n">${i + 1}</span><span class="c">${h.replace('<CT>', caretT).replace('<CS>', caretS)}</span></div>`).join('')}</div>`;
+const bar = (extra = '') => `<header class="bar"><div class="logo"><i>&gt;_</i>Кодовая комната</div><span class="lesson">Занятие 01 · А1 + №10 «Твой роутер»</span>${extra}<span class="sp"></span>
+  <div class="who"><span class="pill t"><b>Д</b>Денис <small>ведёт</small></span><span class="pill s"><b>А</b>Аршак <span class="typing"></span></span></div></header>`;
+const legend = `<div class="legend"><span><i style="background:var(--teacher)"></i>Денис</span><span><i style="background:var(--student)"></i>Аршак</span></div>`;
+const out = (h = '') => `<section class="out"><div class="outhead"><span class="ok"><i></i>Готово</span><small>Запустил Аршак · 0,04 с</small>${h}</div><div class="outbody">${OUT}</div></section>`;
+const runBtns = `<button class="btn ghost">${ic.undo}Заготовка</button><button class="btn">${ic.stop}Стоп</button><button class="btn run">${ic.play}Запустить <kbd>Ctrl ↵</kbd></button>`;
+
+const A = `<div class="screen A">${bar()}
+  <section class="taskband">
+    <div class="nav"><button class="btn">${ic.left}</button><button class="btn">${ic.right}</button></div>
+    <div class="tlabel"><span class="label">№10 · Б4 · Маска, адрес сети · 9 из 15</span><p class="st">${TASK.st}</p><span class="disclose">${ic.down}Как устроен адрес сети</span></div>
+    <div class="dots" title="Задачи занятия">${'<i class="dn"></i>'.repeat(8)}<em></em><i class="on"></i>${'<i></i>'.repeat(6)}</div>
+  </section>
+  <div class="work">
+    <div class="left"><div class="edhead">${legend}<span class="sp"></span>${runBtns}</div>${editor(false)}</div>
+    ${out()}
+  </div></div>`;
+
+const B = `<div class="screen B">${bar()}
+  <div class="work">
+    <aside class="side">
+      <div class="stacktitle"><span class="label">На занятии · ЕГЭ №10</span><span class="disclose">${ic.list}Все стопки</span></div>
+      <div class="stack">${STACKS[1][1].map((x, i) => `<span class="chip ${i === 0 ? 'on' : ''}">${x}</span>`).join('')}</div>
+      <article class="card">
+        <div class="top"><span class="badge">№10 · Б4</span><span class="lvl">База · маска, адрес сети</span></div>
+        <p class="st">${TASK.st}</p>
+        <span class="disclose">${ic.down}Как устроен адрес сети</span>
+        <div class="foot"><button class="btn">${ic.left}А1 · 8</button><button class="btn">Б5${ic.right}</button></div>
+      </article>
+    </aside>
+    <div class="main"><div class="edhead">${legend}<span class="sp"></span>${runBtns}</div>${editor(false)}${out()}</div>
+  </div></div>`;
+
+const C = `<div class="screen C">${bar()}
+  <div class="work">
+    <div class="center">
+      <div class="strip"><span class="h-task">№10 · Б4</span><p class="st">${TASK.st}</p><span class="disclose">${ic.down}Всё условие</span></div>
+      ${editor(true)}
+    </div>
+    <div class="rightcol">
+      <div class="runbox"><button class="btn run">${ic.play}Запустить <kbd>Ctrl ↵</kbd></button><div class="row"><button class="btn">${ic.stop}Стоп</button><button class="btn">${ic.undo}Заготовка</button></div>
+        <div class="row"><button class="btn">${ic.left}А1 · 8</button><button class="btn">${ic.list}Задачи</button><button class="btn">Б5${ic.right}</button></div></div>
+      ${out()}
+    </div>
+  </div></div>`;
+
+const V = [
+  ['A', 'Сцена', 'задача шапкой, код и вывод рядом', A,
+   'Условие стоит широкой шапкой над всем экраном, его читаете оба, не отводя глаз от кода. Вывод справа на всю высоту: длинный вывод программы виден целиком. Переход между задачами — стрелки слева от условия, полоска прогресса показывает, сколько пройдено.',
+   'Длинное условие (№1 с таблицей, №8 со списком слов) раздувает шапку, и редактор становится ниже. Для таких задач шапку придётся сворачивать.'],
+  ['B', 'Карточка с доски', 'задача карточкой слева, как на Holst', B,
+   'Задача выглядит так же, как карточка на доске Holst: Аршак узнаёт её с первого взгляда. Рядом кнопки всех задач стопки, к соседней можно перейти в один клик. Под условием хватает места для картинки графа или таблицы.',
+   'Колонка задачи занимает треть ширины, и код стоит уже. Вывод под кодом ниже, и длинный вывод придётся прокручивать.'],
+  ['C', 'Два голоса', 'код во всю ширину, у каждой строки подписан автор', C,
+   'Больше всего места отдано коду, и он самый крупный: удобно показывать через связь. У каждой строки подписано имя автора, поэтому всегда понятно, где строка Аршака, а где ваша. Все кнопки собраны в одном столбце справа, над выводом.',
+   'Условие видно только в две строки, целиком — по клику. Колонка с подписями авторов отнимает место у строки кода.'],
+];
+
+const root = document.getElementById('variants');
+root.innerHTML = V.map(([l, name, tag, html, plus, minus]) => `
+  <section class="variant" id="v-${l}">
+    <div class="vhead"><span class="letter">${l}</span><h2>${name}</h2><span class="tag">${tag}</span></div>
+    <div class="frame">${html}</div>
+    <div class="notes"><div><h3>Чем лучше</h3><p>${plus}</p></div><div><h3>Чем платит</h3><p>${minus}</p></div></div>
+  </section>`).join('');
+root.style.display = 'grid'; root.style.gap = '56px';
+function fit() { document.querySelectorAll('.frame').forEach((f) => { f.firstElementChild.style.transform = `scale(${f.clientWidth / 1440})`; }); }
+addEventListener('resize', fit); fit();
+</script>
