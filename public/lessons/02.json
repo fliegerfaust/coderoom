@@ -1,0 +1,118 @@
+{
+ "id": "02",
+ "short": "Занятие 02",
+ "title": "Занятие 02 · А2 Строки",
+ "groups": [
+  {
+   "id": "class-py",
+   "title": "На занятии · Python А2",
+   "tasks": [
+    {
+     "id": "c-a2-1",
+     "label": "А2 · 1",
+     "kind": "predict",
+     "topic": "Предскажи вывод",
+     "level": 1,
+     "statement": "Что напечатает программа? Сначала запиши ответ, потом запусти.\n\n```python\nw = 'КИБЕРСПОРТ'\nprint(w[0], w[-1], len(w))\n```",
+     "starter": "w = 'КИБЕРСПОРТ'\nprint(w[0], w[-1], len(w))\n"
+    },
+    {
+     "id": "c-a2-2",
+     "label": "А2 · 2",
+     "kind": "predict",
+     "topic": "Предскажи вывод",
+     "level": 1,
+     "statement": "Что напечатает программа? Сначала запиши ответ, потом запусти.\n\n```python\nw = 'КИБЕРСПОРТ'\nprint('Р' in w, 'Я' in w, w.count('Р'))\n```",
+     "starter": "w = 'КИБЕРСПОРТ'\nprint('Р' in w, 'Я' in w, w.count('Р'))\n"
+    },
+    {
+     "id": "c-a2-3",
+     "label": "А2 · 3",
+     "kind": "predict",
+     "topic": "Предскажи вывод",
+     "level": 1,
+     "statement": "Что напечатает программа? Сначала запиши ответ, потом запусти.\n\n```python\nw = 'КИБЕРСПОРТ'\nprint(w[5:10], w[:5])\n```",
+     "starter": "w = 'КИБЕРСПОРТ'\nprint(w[5:10], w[:5])\n"
+    },
+    {
+     "id": "c-a2-4",
+     "label": "А2 · 4",
+     "kind": "predict",
+     "topic": "Предскажи вывод",
+     "level": 1,
+     "statement": "Что напечатает программа? Сначала запиши ответ, потом запусти.\n\n```python\nprint('ха' * 3 + '!')\n```",
+     "starter": "print('ха' * 3 + '!')\n"
+    },
+    {
+     "id": "c-a2-5",
+     "label": "А2 · 5",
+     "kind": "predict",
+     "topic": "Предскажи вывод",
+     "level": 1,
+     "statement": "Что напечатает программа? Сначала запиши ответ, потом запусти.\n\n```python\nprint(''.join(['Л', 'О', 'Т', 'У']))\n```",
+     "starter": "print(''.join(['Л', 'О', 'Т', 'У']))\n"
+    },
+    {
+     "id": "c-a2-6",
+     "label": "А2 · 6",
+     "kind": "bug",
+     "topic": "Найди ошибку",
+     "level": 1,
+     "statement": "Хотели последнюю букву слова из 10 букв — ошибка. Почему?\n\n```python\nw = 'КИБЕРСПОРТ'\nprint(w[10])\n```",
+     "starter": "w = 'КИБЕРСПОРТ'\nprint(w[10])\n"
+    },
+    {
+     "id": "c-a2-7",
+     "label": "А2 · 7",
+     "kind": "make",
+     "topic": "Напиши сам",
+     "level": 1,
+     "statement": "Ник NOOBMASTER: напечатай первую букву, последнюю и сколько в нём букв O.",
+     "starter": "nick = 'NOOBMASTER'\nprint(___, ___, ___)\n"
+    }
+   ]
+  },
+  {
+   "id": "home-py",
+   "title": "Дома · Python А2",
+   "tasks": [
+    {
+     "id": "h-a2-1",
+     "label": "А2 · 1",
+     "kind": "predict",
+     "topic": "Предскажи вывод",
+     "level": 1,
+     "statement": "Что напечатает программа? Сначала запиши ответ, потом запусти.\n\n```python\nw = 'ГЕЙМПАД'\nprint(w[1], w[-2], w[2:5])\n```",
+     "starter": "w = 'ГЕЙМПАД'\nprint(w[1], w[-2], w[2:5])\n"
+    },
+    {
+     "id": "h-a2-2",
+     "label": "А2 · 2",
+     "kind": "predict",
+     "topic": "Предскажи вывод",
+     "level": 1,
+     "statement": "Что напечатает программа? Сначала запиши ответ, потом запусти.\n\n```python\nprint(len('ЕГЭ' * 3))\n```",
+     "starter": "print(len('ЕГЭ' * 3))\n"
+    },
+    {
+     "id": "h-a2-3",
+     "label": "А2 · 3",
+     "kind": "bug",
+     "topic": "Найди ошибку",
+     "level": 1,
+     "statement": "Хотели посчитать буквы А, но вышла ошибка.\n\n```python\nw = 'БАНАН'\nprint(w.count(А))\n```",
+     "starter": "w = 'БАНАН'\nprint(w.count(А))\n"
+    },
+    {
+     "id": "h-a2-4",
+     "label": "А2 · 4",
+     "kind": "make",
+     "topic": "Напиши сам",
+     "level": 1,
+     "statement": "Ник XxNagibatorxX: сколько в нём строчных x?",
+     "starter": "\n"
+    }
+   ]
+  }
+ ]
+}

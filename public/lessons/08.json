@@ -1,0 +1,109 @@
+{
+ "id": "08",
+ "short": "Занятие 08",
+ "title": "Занятие 08 · А8 Двоичная система и побитовое И",
+ "groups": [
+  {
+   "id": "class-py",
+   "title": "На занятии · Python А8",
+   "tasks": [
+    {
+     "id": "c-a8-1",
+     "label": "А8 · 1",
+     "kind": "predict",
+     "topic": "Предскажи вывод",
+     "level": 1,
+     "statement": "Что напечатает программа? Сначала запиши ответ, потом запусти.\n\n```python\nprint(bin(10), format(5, '08b'))\n```",
+     "starter": "print(bin(10), format(5, '08b'))\n"
+    },
+    {
+     "id": "c-a8-2",
+     "label": "А8 · 2",
+     "kind": "predict",
+     "topic": "Предскажи вывод",
+     "level": 1,
+     "statement": "Что напечатает программа? Сначала запиши ответ, потом запусти.\n\n```python\nprint(int('11111111', 2), int('120', 3))\n```",
+     "starter": "print(int('11111111', 2), int('120', 3))\n"
+    },
+    {
+     "id": "c-a8-3",
+     "label": "А8 · 3",
+     "kind": "predict",
+     "topic": "Предскажи вывод",
+     "level": 1,
+     "statement": "Что напечатает программа? Сначала запиши ответ, потом запусти.\n\n```python\nprint(93 & 248, 159 & 252)\n```",
+     "starter": "print(93 & 248, 159 & 252)\n"
+    },
+    {
+     "id": "c-a8-4",
+     "label": "А8 · 4",
+     "kind": "predict",
+     "topic": "Предскажи вывод",
+     "level": 1,
+     "statement": "Что напечатает программа? Сначала запиши ответ, потом запусти.\n\n```python\nprint(bin(255).count('1'), bin(248).count('1'))\n```",
+     "starter": "print(bin(255).count('1'), bin(248).count('1'))\n"
+    },
+    {
+     "id": "c-a8-5",
+     "label": "А8 · 5",
+     "kind": "bug",
+     "topic": "Найди ошибку",
+     "level": 1,
+     "statement": "Хотели перевести двоичную запись в число — ошибка. Почему?\n\n```python\nprint(int('101'), int('0b101'))\n```",
+     "starter": "print(int('101'), int('0b101'))\n"
+    },
+    {
+     "id": "c-a8-6",
+     "label": "А8 · 6",
+     "kind": "make",
+     "topic": "Напиши сам",
+     "level": 1,
+     "statement": "Адрес сети без ipaddress: октеты IP и маски — списки. Посчитай И по каждому октету и сумму.",
+     "starter": "ip = [10, 172, 93, 200]\nmask = [255, 255, 248, 0]\nnet = [a ___ m for a, m in zip(ip, mask)]\nprint(net, sum(net))\n"
+    }
+   ]
+  },
+  {
+   "id": "home-py",
+   "title": "Дома · Python А8",
+   "tasks": [
+    {
+     "id": "h-a8-1",
+     "label": "А8 · 1",
+     "kind": "predict",
+     "topic": "Предскажи вывод",
+     "level": 1,
+     "statement": "Что напечатает программа? Сначала запиши ответ, потом запусти.\n\n```python\nprint(int('1010', 2), bin(7))\n```",
+     "starter": "print(int('1010', 2), bin(7))\n"
+    },
+    {
+     "id": "h-a8-2",
+     "label": "А8 · 2",
+     "kind": "predict",
+     "topic": "Предскажи вывод",
+     "level": 1,
+     "statement": "Что напечатает программа? Сначала запиши ответ, потом запусти.\n\n```python\nprint(200 & 224, 77 & 240)\n```",
+     "starter": "print(200 & 224, 77 & 240)\n"
+    },
+    {
+     "id": "h-a8-3",
+     "label": "А8 · 3",
+     "kind": "make",
+     "topic": "Напиши сам",
+     "level": 1,
+     "statement": "Сколько единиц в двоичной записи числа 2027?",
+     "starter": "\n"
+    },
+    {
+     "id": "h-a8-4",
+     "label": "А8 · 4",
+     "kind": "bug",
+     "topic": "Найди ошибку",
+     "level": 1,
+     "statement": "Хотели перевести '12' из троичной системы, но вышла ошибка.\n\n```python\nprint(int('12', 2))\n```",
+     "starter": "print(int('12', 2))\n"
+    }
+   ]
+  }
+ ]
+}
