@@ -178,7 +178,7 @@ test('ученик видит только открытые задачи; «Пр
   await t.locator('.stack [data-task="c-a1-3"]').click();
   await expect(s.locator('.badge')).toHaveText('А1 · 3');
   await expect(s.locator('.stack .chip')).toHaveCount(2);
-  await s.getByRole('button', { name: 'Открытые задачи' }).click();
+  await s.getByRole('button', { name: 'Мои задачи' }).click();
   await expect(s.locator('.tasklist .chip')).toHaveCount(3); // А1·1, А1·3 и «Чистый лист»
   await expect(s.locator('.tasklist')).not.toContainText('№10');
   await s.keyboard.press('Escape');
@@ -186,4 +186,65 @@ test('ученик видит только открытые задачи; «Пр
   // ученик может вернуться к уже открытой задаче
   await s.locator('.stack [data-task="c-a1-1"]').click();
   await expect(t.locator('.badge')).toHaveText('А1 · 1');
+});
+
+test('домашка выдаётся ученику; Черепаха рисует у обоих; опечатка объясняется', async ({ context }) => {
+  const t = await context.newPage();
+  await t.goto('./?db=local');
+  await t.getByLabel('Твоё имя в комнате').fill('Денис');
+  await t.getByRole('button', { name: 'Создать комнату' }).click();
+  const pin = (await t.locator('.pinbig').textContent())!.trim();
+  const link = (await t.locator('[data-link]').textContent())!.trim();
+  await t.getByRole('button', { name: 'Готово' }).click();
+  const s = await context.newPage();
+  await s.addInitScript(() => { try { if (!sessionStorage.getItem('e2e')) { sessionStorage.setItem('e2e', '1'); localStorage.removeItem('coderoom-me'); localStorage.removeItem('coderoom-rooms'); } } catch { /* */ } });
+  await s.goto('./?db=local#' + link.split('#')[1]);
+  await s.getByLabel('Как тебя зовут').fill('Аршак');
+  await s.getByLabel('PIN комнаты').fill(pin);
+  await s.getByRole('button', { name: 'Войти' }).click();
+  await expect(s.locator('.badge')).toHaveText('А1 · 1');
+  await expect(s.locator('.homebtn')).toHaveCount(0);
+
+  // выдаём «Дома · Python А1» (4 задачи)
+  await t.getByRole('button', { name: 'Все стопки' }).click();
+  await t.locator('[data-issue="home-py"]').click();
+  await expect(t.locator('[data-issue="home-py"]')).toHaveText('Выдана ученику');
+  await t.keyboard.press('Escape');
+  await expect(s.locator('.homebtn')).toContainText('Домашка');
+  await expect(s.locator('.homebtn')).toContainText('4 задачи');
+  await s.getByRole('button', { name: 'Мои задачи' }).click();
+  await expect(s.locator('.tasklist')).toContainText('Дома · Python А1');
+  await expect(s.locator('.tasklist')).not.toContainText('Дома · ЕГЭ');
+  await s.keyboard.press('Escape');
+  await s.locator('.homebtn').click();
+  await expect(t.locator('.badge')).toHaveText('А1 · 1');
+  await expect(s.locator('.lvl')).toBeVisible();
+  await expect(s.locator('.stacktitle .label')).toHaveText('Дома · Python А1');
+  await expect(s.locator('.stack .chip')).toHaveCount(4);
+
+  // снять выдачу — домашка уходит (кроме открытой сейчас)
+  await t.getByRole('button', { name: 'Все стопки' }).click();
+  await t.locator('[data-issue="home-py"]').click();
+  await t.keyboard.press('Escape');
+  await expect(s.locator('.stack .chip')).toHaveCount(1);
+
+  // Черепаха: рисунок у обоих, во весь экран
+  await t.locator('.cm-content').click();
+  await t.keyboard.press('ControlOrMeta+a');
+  await t.keyboard.type('from turtle import *\ntracer(0)\nlt(90)\nfor i in range(4):\nfd(100)\nrt(90)\n');
+  await t.keyboard.press('ControlOrMeta+Enter');
+  await expect(s.locator('.turtle figcaption')).toContainText('4 отрезка', { timeout: 60_000 });
+  await expect(s.locator('.tt-svg path').nth(1)).toBeVisible();
+  await s.getByRole('button', { name: 'Во весь экран' }).click();
+  await expect(s.locator('.tt-full .tt-svg')).toBeVisible();
+  await s.keyboard.press('Escape');
+  await expect(s.locator('.tt-full')).toHaveCount(0);
+
+  // опечатка в имени модуля
+  await t.locator('.cm-content').click();
+  await t.keyboard.press('ControlOrMeta+a');
+  await t.keyboard.type('import ipaddress\nnet = ipadress.ip_network("1.2.3.4/24")');
+  await t.keyboard.press('ControlOrMeta+Enter');
+  await expect(s.locator('.err .h')).toContainText('ipaddress', { timeout: 60_000 });
+  await expect(s.locator('.err .h')).toContainText('опечатк');
 });
