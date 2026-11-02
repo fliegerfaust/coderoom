@@ -14,6 +14,7 @@ class _Rec:
 
 _LIMIT = 40000
 _rec = _Rec()
+_state = {'last': None}   # черепаха, которая двигалась последней — её и рисуем треугольником
 
 def _color(args):
     if not args: return None
@@ -30,8 +31,10 @@ class Turtle:
     def __init__(self, *a, **kw):
         self._x = 0.0; self._y = 0.0; self._h = 0.0; self._down = True
         self._w = 1; self._c = _rec.ci('#141414'); self._fill = None; self._visible = True
+        _state['last'] = self
     # движение
     def _move(self, x, y):
+        _state['last'] = self
         if self._down:
             if len(_rec.segs) < _LIMIT:
                 _rec.segs.append([round(self._x, 3), round(self._y, 3), round(x, 3), round(y, 3), self._c, self._w])
@@ -129,11 +132,11 @@ _pen = Turtle()
 
 def _reset():
     global _rec, _pen
-    _rec = _Rec(); _pen = Turtle()
+    _rec = _Rec(); _pen = Turtle(); _state['last'] = None
 
 def _export():
     import json
-    t = _pen
+    t = _state['last'] or _pen
     return json.dumps({'segs': _rec.segs, 'dots': _rec.dots, 'fills': _rec.fills, 'colors': _rec.colors, 'cut': _rec.cut,
                        'turtle': [round(t._x, 3), round(t._y, 3), t._h, t._visible]})
 
