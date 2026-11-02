@@ -58,7 +58,7 @@ export class RoomView {
       </section>
     </div>`);
     this.root.querySelectorAll<HTMLElement>('[data-el]').forEach((e) => { this.els[e.dataset.el!] = e; });
-    this.editor = new CodeEditor({ parent: this.els.editor, onRun: () => this.run(), fontSize: this.font });
+    this.editor = new CodeEditor({ parent: this.els.editor, onRun: () => this.run(), fontSize: this.font, completion: this.completionOn() });
     this.root.addEventListener('click', (e) => this.onClick(e));
     document.addEventListener('keydown', (e) => {
       if (e.key !== 'Escape') return;
@@ -80,7 +80,7 @@ export class RoomView {
     r.onPeers((p) => this.renderPeers(p));
     r.onRun((run) => this.renderRun(run));
     r.runner.onState(() => this.renderButtons());
-    r.onMeta(() => { void this.syncFromMeta(); });
+    r.onMeta(() => { this.editor.setCompletion(this.completionOn()); if (this.lessonMenu === 'menu') this.renderLessonNav(); void this.syncFromMeta(); });
     r.doc.getMap('ran').observe(() => this.renderTask());
     r.opened.observe(() => { if (!r.teacher) this.renderTask(); });
     r.issued.observe(() => this.renderTask());
@@ -163,6 +163,8 @@ export class RoomView {
     this.root.querySelector('.invitebtn')?.setAttribute('aria-expanded', 'false');
   }
 
+  private completionOn() { return this.room.teacher || this.room.studentCompletion; }
+
   // ── занятие: переключатель и «Стереть всё» (LS.4, RM.4) ──
   private renderLessonNav() {
     const nav = this.els.lessonNav;
@@ -174,6 +176,9 @@ export class RoomView {
         <h4>Занятие</h4>
         <div class="lessonlist">${this.lessons.map((l) => `<button class="lessonrow ${l.id === this.lesson?.id ? 'on' : ''}" data-lesson="${esc(l.id)}">
           <b>${esc(l.short)}</b><span>${esc(l.title.replace(/^Занятие \d+\s*·\s*/, ''))}</span></button>`).join('')}</div>
+        <h4>Подсказки в редакторе</h4>
+        <label class="setrow"><span><b>Автодополнение у ученика</b><span>Пока выключено, имена функций ученик пишет сам. Параметры и описания видны всегда.</span></span>
+          <input type="checkbox" role="switch" class="switch" data-act="complete" ${this.room.studentCompletion ? 'checked' : ''}></label>
         <div class="danger-zone"><div><b>Начать заново</b><span>Стереть код, ввод, вывод и отметки всех задач. Ссылка и PIN останутся.</span></div>
           <button class="btn danger" data-act="erase-ask">${ic.undo}<span>Стереть всё…</span></button></div>
       </div>`;
@@ -331,6 +336,7 @@ export class RoomView {
       case 'turtle-full': if (this.room.run?.draw) openTurtleFull(this.room.run.draw); break;
       case 'invite': if (this.inviteEl) this.closeInvite(); else this.openInvite(); e.stopPropagation(); break;
       case 'lessons': this.lessonMenu = this.lessonMenu ? '' : 'menu'; this.renderLessonNav(); e.stopPropagation(); break;
+      case 'complete': this.room.setStudentCompletion((el as HTMLInputElement).checked); e.stopPropagation(); break;
       case 'erase-ask': this.lessonMenu = 'confirm'; this.renderLessonNav(); e.stopPropagation(); break;
       case 'erase-cancel': this.lessonMenu = 'menu'; this.renderLessonNav(); e.stopPropagation(); break;
       case 'erase-do': {
