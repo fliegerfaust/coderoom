@@ -10,6 +10,7 @@ import { yCollab, yUndoManagerKeymap } from 'y-codemirror.next';
 import * as Y from 'yjs';
 import type { Awareness } from 'y-protocols/awareness';
 import { authorship, type Author } from './authorship';
+import { pyHints, pyCompletion } from './hints';
 
 export const codeHighlight = HighlightStyle.define([
   { tag: [t.keyword, t.controlKeyword, t.definitionKeyword, t.moduleKeyword, t.operatorKeyword], color: 'var(--syn-keyword)', fontWeight: '600' },
@@ -27,12 +28,15 @@ export interface CodeEditorOpts {
   parent: HTMLElement;
   onRun: () => void;
   fontSize: number;
+  /** автодополнение: у учителя всегда, у ученика — по переключателю */
+  completion: boolean;
 }
 
 export class CodeEditor {
   view: EditorView | null = null;
   private collab = new Compartment();
   private size = new Compartment();
+  private complete = new Compartment();
   private undo: Y.UndoManager | null = null;
 
   constructor(private o: CodeEditorOpts) {}
@@ -58,6 +62,7 @@ export class CodeEditor {
           indentOnInput(), bracketMatching(), closeBrackets(),
           indentUnit.of('    '), EditorState.tabSize.of(4),
           python(), syntaxHighlighting(codeHighlight),
+          pyHints(), this.complete.of(pyCompletion(this.o.completion)),
           keymap.of([...closeBracketsKeymap, ...yUndoManagerKeymap, ...defaultKeymap, indentWithTab]),
           this.collab.of(yCollab(text, awareness, { undoManager: this.undo })),
           this.size.of(this.fontTheme(this.o.fontSize)),
@@ -70,6 +75,12 @@ export class CodeEditor {
   setFontSize(px: number) {
     this.o.fontSize = px;
     this.view?.dispatch({ effects: this.size.reconfigure(this.fontTheme(px)) });
+  }
+
+  setCompletion(on: boolean) {
+    if (this.o.completion === on) return;
+    this.o.completion = on;
+    this.view?.dispatch({ effects: this.complete.reconfigure(pyCompletion(on)) });
   }
 
   focus() { this.view?.focus(); }

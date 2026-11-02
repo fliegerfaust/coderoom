@@ -248,3 +248,53 @@ test('домашка выдаётся ученику; Черепаха рису�
   await expect(s.locator('.err .h')).toContainText('ipaddress', { timeout: 60_000 });
   await expect(s.locator('.err .h')).toContainText('опечатк');
 });
+
+test('подсказки параметров у обоих, автодополнение у ученика только по переключателю', async ({ context }) => {
+  const t = await context.newPage();
+  await t.goto('./?db=local');
+  await t.getByLabel('Твоё имя в комнате').fill('Денис');
+  await t.getByRole('button', { name: 'Создать комнату' }).click();
+  const pin = (await t.locator('.pinbig').textContent())!.trim();
+  const link = (await t.locator('[data-link]').textContent())!.trim();
+  await t.getByRole('button', { name: 'Готово' }).click();
+  const s = await context.newPage();
+  await s.addInitScript(() => { try { if (!sessionStorage.getItem('e2e')) { sessionStorage.setItem('e2e', '1'); localStorage.removeItem('coderoom-me'); localStorage.removeItem('coderoom-rooms'); } } catch { /* */ } });
+  await s.goto('./?db=local#' + link.split('#')[1]);
+  await s.getByLabel('Как тебя зовут').fill('Аршак');
+  await s.getByLabel('PIN комнаты').fill(pin);
+  await s.getByRole('button', { name: 'Войти' }).click();
+  await expect(s.locator('.badge')).toHaveText('А1 · 1');
+
+  // ученик: параметры видны, автодополнения нет
+  await typeCode(s, '\nx = range(1, ');
+  await expect(s.locator('.cm-pyhint .sig')).toHaveText('range(start, stop?, step?) → range');
+  await expect(s.locator('.cm-pyhint .sig .on')).toHaveText('stop?');
+  await expect(s.locator('.cm-pyhint .param')).toContainText('сам stop НЕ входит');
+  await s.keyboard.type('10)\nimport math\nmath.sq');
+  await expect(s.locator('.cm-pyhint')).toHaveCount(0);
+  await s.waitForTimeout(400);
+  await expect(s.locator('.cm-tooltip-autocomplete')).toHaveCount(0);
+  await s.keyboard.press('Backspace');
+  await s.keyboard.press('Backspace');
+  await s.keyboard.press('Backspace');
+  await s.keyboard.press('Backspace');
+  await s.keyboard.press('Backspace');
+
+  // учитель: автодополнение с описанием
+  await typeCode(t, '\nmath.sq');
+  await expect(t.locator('.cm-tooltip-autocomplete')).toContainText('sqrt');
+  await expect(t.locator('.cm-completionInfo .cm-pyhint')).toContainText('Квадратный корень');
+  await t.keyboard.press('Escape');
+
+  // учитель включает автодополнение ученику
+  await t.locator('.lessonbtn').click();
+  await t.getByRole('switch', { name: /Автодополнение у ученика/ }).check();
+  await t.keyboard.press('Escape');
+  await typeCode(s, '\nprin');
+  await expect(s.locator('.cm-tooltip-autocomplete')).toContainText('print');
+
+  // наведение показывает описание
+  await s.keyboard.press('Escape');
+  await s.locator('.cm-line', { hasText: 'range(1, 10)' }).getByText('range').hover();
+  await expect(s.locator('.cm-tooltip-hover .cm-pyhint')).toContainText('Последовательность целых чисел');
+});
