@@ -7,6 +7,7 @@ import { renderStatement } from './markdown';
 import { ic } from './icons';
 import { h, esc, toast } from './dom';
 import { sharePanel } from './entry-view';
+import { turtleFigure, openTurtleFull } from './turtle-view';
 
 const FONT_KEY = 'coderoom-font';
 const readFont = () => { try { return Number(localStorage.getItem(FONT_KEY)) || 20; } catch { return 20; } };
@@ -268,9 +269,10 @@ export class RoomView {
     st.className = `status ${mine.status}`; st.innerHTML = `<i></i>${label}`;
     const dur = mine.status === 'running' ? secs(Date.now() - mine.at) : mine.ms != null ? secs(mine.ms) : '';
     info.textContent = `Запустил ${mine.name}${dur ? ' · ' + dur : ''}`;
-    let html = mine.cut ? '<span class="cut">Начало вывода обрезано: показываю последние строки.</span>' : '';
+    let html = mine.draw ? turtleFigure(mine.draw) : '';
+    html += mine.cut ? '<span class="cut">Начало вывода обрезано: показываю последние строки.</span>' : '';
     html += esc(mine.out || '');
-    if (!mine.out && mine.status === 'done') html += '<span class="empty">Программа ничего не напечатала. Чтобы увидеть результат, нужен print(…).</span>';
+    if (!mine.out && !mine.draw && mine.status === 'done') html += '<span class="empty">Программа ничего не напечатала. Чтобы увидеть результат, нужен print(…).</span>';
     if (mine.status === 'running' && !mine.out && this.room.runner.state === 'loading') html += '<span class="empty">Python загружается, первый раз это занимает несколько секунд…</span>';
     if (mine.error) {
       const e = mine.error;
@@ -300,6 +302,7 @@ export class RoomView {
       case 'run': this.run(); break;
       case 'stop': this.room.stop(); break;
       case 'reset': this.room.resetTask(this.task, this.lesson?.id ?? null); this.editor.focus(); break;
+      case 'turtle-full': if (this.room.run?.draw) openTurtleFull(this.room.run.draw); break;
       case 'invite': if (this.inviteEl) this.closeInvite(); else this.openInvite(); e.stopPropagation(); break;
       case 'lessons': this.lessonMenu = this.lessonMenu ? '' : 'menu'; this.renderLessonNav(); e.stopPropagation(); break;
       case 'erase-ask': this.lessonMenu = 'confirm'; this.renderLessonNav(); e.stopPropagation(); break;

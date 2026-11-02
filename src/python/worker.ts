@@ -2,6 +2,7 @@
 // Python (Pyodide) в отдельном потоке: страница не замирает, «Стоп» — terminate() (PY.1, PY.3).
 import type { FromWorker, ToWorker } from './protocol';
 import { PROGRAM_FILE } from './errors';
+import { TURTLE_PY } from './turtle_py';
 
 declare const self: DedicatedWorkerGlobalScope;
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
@@ -42,6 +43,10 @@ def input(prompt=''):
     return s
 builtins.input = input
 `);
+  // Черепаха для №6: свой модуль turtle, рисунок отдаём странице после запуска
+  const ns = py.globals.get('dict')();
+  py.runPython(TURTLE_PY, { globals: ns });
+  ns.destroy();
   post({ t: 'ready', ms: Math.round(performance.now() - t0) });
 }
 
@@ -56,6 +61,7 @@ async function run(m: Extract<ToWorker, { t: 'run' }>) {
       py.FS.writeFile(f.name, buf);
     }
     py.FS.writeFile(PROGRAM_FILE, new TextEncoder().encode(m.code));
+    py.runPython("import sys; sys.modules['turtle']._reset()");
     const globals = py.globals.get('dict')();
     globals.set('__name__', '__main__');
     try {
@@ -63,12 +69,21 @@ async function run(m: Extract<ToWorker, { t: 'run' }>) {
     } finally {
       py.runPython('import sys; sys.stdout.flush(); sys.stderr.flush()');
       globals.destroy();
+      sendDrawing(m.id);
     }
     post({ t: 'done', id: m.id, ms: Math.round(performance.now() - t0) });
   } catch (e) {
     try { py.runPython('import sys; sys.stdout.flush()'); } catch { /* */ }
     post({ t: 'exc', id: m.id, raw: String((e as Error)?.message ?? e), ms: Math.round(performance.now() - t0) });
   }
+}
+
+function sendDrawing(id: string) {
+  try {
+    if (py.runPython("import sys; sys.modules['turtle']._used()")) {
+      post({ t: 'draw', id, d: JSON.parse(py.runPython("import sys; sys.modules['turtle']._export()")) });
+    }
+  } catch { /* рисунок не обязателен */ }
 }
 
 self.onmessage = (ev: MessageEvent<ToWorker>) => {

@@ -13,6 +13,9 @@ const cases = {
   eq: "x = 3\nif x = 3:\n    print(x)",
   unclosed: "print((1 + 2)",
   file: "f = open('17.txt')",
+  typo: "import ipaddress\nfor k in range(33):\n    net = ipadress.ip_network('98.162.71.94/%d' % k, strict=False)",
+  attr: "import math\nprint(math.sqroot(16))",
+  module: "import itertool",
 };
 const out = {};
 for (const [k, code] of Object.entries(cases)) {

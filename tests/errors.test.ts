@@ -52,4 +52,14 @@ describe('разбор ошибок Python (PY.2)', () => {
     expect(lines[i + 1].trim()).toMatch(/^[~^]+$/);
     expect(lines[i + 1].indexOf('~')).toBe(lines[i].indexOf("'a'"));
   });
+  it('опечатка: подсказка Python «Did you mean» по-русски', () => {
+    const e = p('typo');
+    expect(e.type).toBe('NameError');
+    expect(e.line).toBe(3);
+    expect(e.hint).toContain('ipadress');
+    expect(e.hint).toContain('ipaddress');
+    expect(e.hint).not.toContain('кавычки');
+    expect(p('attr').hint).toContain('sqrt');
+    expect(p('module').hint).toContain('itertools');
+  });
 });
