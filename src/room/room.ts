@@ -6,6 +6,7 @@ import { YSync } from '../sync/ysync';
 import type { Me } from './access';
 import { PythonRunner } from '../python/runner';
 import type { FriendlyError } from '../python/errors';
+import type { TurtleDraw } from '../python/protocol';
 import type { LessonTask } from '../lessons/types';
 
 export const OUT_LIMIT = 40_000;
@@ -23,6 +24,8 @@ export interface RunState {
   at: number;
   ms?: number;
   error?: FriendlyError;
+  /** рисунок Черепахи (№6) */
+  draw?: TurtleDraw | null;
   stop?: string;      // id запуска, который просят остановить
 }
 
@@ -153,16 +156,18 @@ export class Room {
     const code = this.code(key).toString();
     const stdin = this.stdin(key).toString();
     this.outBuf = ''; this.outCut = false;
+    let draw: TurtleDraw | null = null;
     const id = this.runner.run(code, stdin, task.files ?? [], {
       onOut: (s) => {
         this.outBuf += s;
         if (this.outBuf.length > OUT_LIMIT) { this.outBuf = this.outBuf.slice(-OUT_LIMIT); this.outCut = true; }
         if (!this.outTimer) this.outTimer = self.setTimeout(() => this.flushOut(), OUT_FLUSH_MS);
       },
+      onDraw: (d) => { draw = d; },
       onDone: (r) => {
         clearTimeout(this.outTimer); this.outTimer = 0;
         const st: RunStatus = r.ok ? 'done' : 'stopped' in r ? 'stopped' : 'error';
-        const patch: Partial<RunState> = { status: st, out: this.outBuf, cut: this.outCut, ms: r.ms };
+        const patch: Partial<RunState> = { status: st, out: this.outBuf, cut: this.outCut, ms: r.ms, draw };
         if (!r.ok && 'error' in r) patch.error = r.error;
         if (this.run && this.run.id === id) void this.db.set(`${this.base}/run`, { ...this.run, ...patch, stop: null });
         this.doc.getMap('ran').set(key, { status: st, by: this.me.name, at: Date.now() });

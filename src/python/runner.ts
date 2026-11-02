@@ -1,11 +1,12 @@
 // Управление воркером Python со страницы: загрузка, запуск, вывод потоком, стоп (PY.1–PY.5).
-import type { FromWorker, RunFile, ToWorker } from './protocol';
+import type { FromWorker, RunFile, ToWorker, TurtleDraw } from './protocol';
 import { parsePythonError, type FriendlyError } from './errors';
 
 export type RunnerState = 'loading' | 'ready' | 'running' | 'failed';
 
 export interface RunHandlers {
   onOut(s: string, stream: 'out' | 'err'): void;
+  onDraw?(d: TurtleDraw): void;
   onDone(r: { ok: true; ms: number } | { ok: false; ms: number; error: FriendlyError } | { ok: false; stopped: true; ms: number }): void;
 }
 
@@ -38,6 +39,7 @@ export class PythonRunner {
     if (m.t === 'fatal') { console.error(m.s); this.set('failed'); return; }
     if (m.id !== this.runId || !this.handlers) return;
     if (m.t === 'out' || m.t === 'err') this.handlers.onOut(m.s, m.t);
+    else if (m.t === 'draw') this.handlers.onDraw?.(m.d);
     else if (m.t === 'done') this.finish({ ok: true, ms: m.ms });
     else if (m.t === 'exc') this.finish({ ok: false, ms: m.ms, error: parsePythonError(m.raw) });
   }
