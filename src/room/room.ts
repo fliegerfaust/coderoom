@@ -86,6 +86,9 @@ export class Room {
 
   // ── задача ──────────────────────────────────────────────
   get lessonId(): string | null { return (this.meta.get('lesson') as string) ?? null; }
+  /** Автодополнение у ученика: по умолчанию выключено, функции он пишет сам (ED.6) */
+  get studentCompletion(): boolean { return this.meta.get('complete') === true; }
+  setStudentCompletion(on: boolean) { this.meta.set('complete', on); }
   get taskId(): string | null { return (this.meta.get('task') as string) ?? null; }
   /** Код и ввод задачи — по паре «занятие:задача»: номера задач в разных занятиях повторяются */
   static key(lessonId: string | null, taskId: string) { return `${lessonId ?? '-'}:${taskId}`; }

@@ -285,3 +285,39 @@ input, textarea { font: inherit; color: inherit; }
 .homebtn span { flex: 1; }
 .homebtn svg { width: 16px; height: 16px; }
 .homebtn:hover { border-color: color-mix(in srgb, var(--ink) 25%, var(--line)); }
+
+/* ── подсказки редактора (ED.4–ED.6) ── */
+.editor-host .cm-tooltip { background: var(--paper); color: var(--ink); border: 1px solid var(--line); border-radius: var(--r);
+  box-shadow: 0 16px 32px -18px rgba(20,20,20,.45); font: 500 14px/1.45 var(--f-ui); overflow: hidden; }
+.cm-pyhint { max-width: min(440px, 80vw); padding: 10px 14px 11px; display: grid; gap: 5px; }
+.cm-pyhint .sig { font: 500 15px/1.5 var(--f-code); color: var(--ink-2); overflow-wrap: anywhere; }
+.cm-pyhint .sig b { color: var(--syn-fn); font-weight: 700; }
+.cm-pyhint .sig i { font-style: normal; color: var(--ink-3); }
+.cm-pyhint .sig em { font-style: normal; color: var(--ink-3); font-size: .9em; }
+.cm-pyhint .sig .on { color: #141414; font-weight: 700; background: var(--lime); border-radius: 6px; padding: 0 3px; }
+.cm-pyhint .sig .on i { color: #141414; opacity: .6; }
+.cm-pyhint .param { color: var(--ink); }
+.cm-pyhint .param code { font: 700 .92em var(--f-code); }
+.cm-pyhint .param small { color: var(--ink-3); font-size: 12px; font-weight: 600; white-space: nowrap; }
+.cm-pyhint .desc { color: var(--ink-2); }
+.cm-pyhint pre { margin: 3px 0 0; padding: 8px 10px; background: var(--code-bg); border-radius: 6px; font: 500 13px/1.55 var(--f-code); white-space: pre-wrap; color: var(--ink); }
+.editor-host .cm-tooltip-autocomplete > ul { font: 500 15px/1.4 var(--f-code); max-height: 16em; padding: 4px; }
+.editor-host .cm-tooltip-autocomplete > ul > li { padding: 4px 10px; border-radius: 6px; color: var(--ink); }
+.editor-host .cm-tooltip-autocomplete > ul > li[aria-selected] { background: var(--ink); color: var(--paper); }
+.editor-host .cm-tooltip-autocomplete > ul > li[aria-selected] .cm-completionDetail { color: color-mix(in srgb, var(--paper) 65%, transparent); }
+.editor-host .cm-completionDetail { font-style: normal; color: var(--ink-3); margin-left: .3em; }
+.editor-host .cm-completionMatchedText { text-decoration: none; font-weight: 800; }
+.editor-host .cm-tooltip.cm-completionInfo { padding: 0; }
+.editor-host .cm-tooltip.cm-completionInfo .cm-pyhint { padding: 10px 14px 11px; }
+
+/* строка-переключатель в меню учителя */
+.setrow { display: flex; gap: 14px; align-items: center; justify-content: space-between; padding: 8px; border-radius: 8px; cursor: pointer; }
+.setrow:hover { background: var(--ground); }
+.setrow > span { display: grid; gap: 2px; min-width: 0; }
+.setrow b { font-size: 14px; font-weight: 800; }
+.setrow > span > span { font-size: 13px; color: var(--ink-3); line-height: 1.4; }
+.switch { appearance: none; flex: none; width: 40px; height: 24px; margin: 0; border-radius: 999px; background: var(--line); position: relative; cursor: pointer; transition: background .15s; }
+.switch::after { content: ''; position: absolute; top: 3px; left: 3px; width: 18px; height: 18px; border-radius: 50%; background: var(--paper);
+  box-shadow: 0 1px 3px rgba(20,20,20,.3); transition: transform .18s cubic-bezier(.2,.8,.2,1); }
+.switch:checked { background: var(--violet); }
+.switch:checked::after { transform: translateX(16px); }
