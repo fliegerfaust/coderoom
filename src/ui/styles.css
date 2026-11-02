@@ -272,3 +272,16 @@ input, textarea { font: inherit; color: inherit; }
 .tt-full-bar span:not(.sp) { font-size: 13px; color: var(--ink-3); font-weight: 600; }
 .tt-full-box { background: var(--paper); border: 1px solid var(--line); border-radius: 14px; overflow: hidden; cursor: grab; touch-action: none; }
 .tt-full-box:active { cursor: grabbing; }
+
+/* Домашка: выдать ученику (HW.1) */
+.grouphead { display: flex; align-items: center; justify-content: space-between; gap: 8px; padding-right: 4px; }
+.grouphead h4 { margin-bottom: 4px; }
+.issuebtn { height: 30px; padding: 0 10px; font-size: 13px; }
+.issuebtn.on { color: var(--student); background: var(--student-soft); }
+.issuebtn.on::before { content: ""; width: 6px; height: 6px; border-radius: 50%; background: var(--student); }
+.homebtn { display: flex; align-items: center; gap: 10px; width: 100%; text-align: left; border: 1px solid var(--line); background: var(--paper);
+  border-radius: 12px; padding: 10px 14px; font: 600 14px var(--f-ui); color: var(--ink-2); }
+.homebtn b { font-weight: 800; color: var(--ink); background: linear-gradient(transparent 62%, var(--lime) 62%, var(--lime) 92%, transparent 92%); }
+.homebtn span { flex: 1; }
+.homebtn svg { width: 16px; height: 16px; }
+.homebtn:hover { border-color: color-mix(in srgb, var(--ink) 25%, var(--line)); }

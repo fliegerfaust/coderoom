@@ -40,6 +40,8 @@ export class Room {
   private inited = this.doc.getMap<boolean>('inited');
   /** Задачи, которые уже открывали в комнате: только их видит ученик (ST.2) */
   readonly opened = this.doc.getMap<boolean>('opened');
+  /** Выданные ученику стопки «Дома»: ключ «занятие:стопка» (HW.1) */
+  readonly issued = this.doc.getMap<boolean>('issued');
   private sync: YSync | null = null;
   /** Поколение комнаты: «Стереть всё» начинает новое, старые данные удаляются */
   gen = 0;
