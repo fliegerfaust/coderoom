@@ -38,5 +38,17 @@
  "file": {
   "code": "f = open('17.txt')",
   "raw": "Traceback (most recent call last):\n  File \"/lib/python314.zip/_pyodide/_base.py\", line 619, in eval_code_async\n    await CodeRunner(\n    ...<10 lines>...\n    .run_async(globals, locals)\n  File \"/lib/python314.zip/_pyodide/_base.py\", line 420, in run_async\n    coroutine = eval(self.code, globals, locals)\n  File \"program.py\", line 1, in <module>\n    f = open('17.txt')\nFileNotFoundError: [Errno 44] No such file or directory: '17.txt'\n"
+ },
+ "typo": {
+  "code": "import ipaddress\nfor k in range(33):\n    net = ipadress.ip_network('98.162.71.94/%d' % k, strict=False)",
+  "raw": "Traceback (most recent call last):\n  File \"/lib/python314.zip/_pyodide/_base.py\", line 619, in eval_code_async\n    await CodeRunner(\n    ...<10 lines>...\n    .run_async(globals, locals)\n  File \"/lib/python314.zip/_pyodide/_base.py\", line 420, in run_async\n    coroutine = eval(self.code, globals, locals)\n  File \"program.py\", line 3, in <module>\n    net = ipadress.ip_network('98.162.71.94/%d' % k, strict=False)\n          ^^^^^^^^\nNameError: name 'ipadress' is not defined. Did you mean: 'ipaddress'?\n"
+ },
+ "attr": {
+  "code": "import math\nprint(math.sqroot(16))",
+  "raw": "Traceback (most recent call last):\n  File \"/lib/python314.zip/_pyodide/_base.py\", line 619, in eval_code_async\n    await CodeRunner(\n    ...<10 lines>...\n    .run_async(globals, locals)\n  File \"/lib/python314.zip/_pyodide/_base.py\", line 420, in run_async\n    coroutine = eval(self.code, globals, locals)\n  File \"program.py\", line 2, in <module>\n    print(math.sqroot(16))\n          ^^^^^^^^^^^\nAttributeError: module 'math' has no attribute 'sqroot'. Did you mean: 'sqrt'?\n"
+ },
+ "module": {
+  "code": "import itertool",
+  "raw": "Traceback (most recent call last):\n  File \"/lib/python314.zip/_pyodide/_base.py\", line 619, in eval_code_async\n    await CodeRunner(\n    ...<10 lines>...\n    .run_async(globals, locals)\n  File \"/lib/python314.zip/_pyodide/_base.py\", line 420, in run_async\n    coroutine = eval(self.code, globals, locals)\n  File \"program.py\", line 1, in <module>\n    import itertool\nModuleNotFoundError: No module named 'itertool'\n"
  }
 }

@@ -16,9 +16,32 @@ export interface FriendlyError {
   traceback: string;
 }
 
+/** Python 3.12+ сам подсказывает опечатку: «Did you mean: 'ipaddress'?» */
+const didYouMean = (msg: string) => msg.match(/Did you mean:? '([^']+)'\??/)?.[1];
+
+// известные модули для ЕГЭ — подсказка, если имя модуля написано с ошибкой
+const EGE_MODULES = ['itertools', 'math', 'ipaddress', 'functools', 'string', 're', 'fnmatch', 'collections', 'sys', 'turtle', 'decimal', 'fractions', 'datetime'];
+function closest(name: string): string | null {
+  let best: string | null = null, bd = 3;
+  for (const m of EGE_MODULES) {
+    const d = lev(name, m);
+    if (d < bd) { bd = d; best = m; }
+  }
+  return best;
+}
+function lev(a: string, b: string) {
+  const dp = Array.from({ length: a.length + 1 }, (_, i) => [i, ...Array(b.length).fill(0)]);
+  for (let j = 1; j <= b.length; j++) dp[0][j] = j;
+  for (let i = 1; i <= a.length; i++) for (let j = 1; j <= b.length; j++)
+    dp[i][j] = Math.min(dp[i - 1][j] + 1, dp[i][j - 1] + 1, dp[i - 1][j - 1] + (a[i - 1] === b[j - 1] ? 0 : 1));
+  return dp[a.length][b.length];
+}
+
 const HINTS: Array<[RegExp, (m: RegExpMatchArray, msg: string) => string]> = [
   [/^NameError$/, (_m, msg) => {
     const name = msg.match(/name '(.+?)' is not defined/)?.[1];
+    const sug = didYouMean(msg);
+    if (name && sug) return `Похоже на опечатку: ты написал «${name}», а Python знает «${sug}». Исправь имя в этой строке.`;
     return name
       ? `Python не знает, что такое «${name}». Проверь написание. Если это текст, возьми его в кавычки: '${name}'.`
       : 'Python не знает этого имени. Проверь написание или задай переменную раньше.';
@@ -57,12 +80,20 @@ const HINTS: Array<[RegExp, (m: RegExpMatchArray, msg: string) => string]> = [
       : 'Значение не подходит: например, `int(\'abc\')`.'],
   [/^AttributeError$/, (_m, msg) => {
     const a = msg.match(/has no attribute '(.+?)'/)?.[1];
+    const sug = didYouMean(msg);
+    if (a && sug) return `Похоже на опечатку: после точки написано «${a}», а есть «${sug}».`;
     return a ? `У этого значения нет «${a}». Проверь написание после точки.` : 'Нет такого метода у этого значения.';
   }],
   [/^EOFError$/, () => 'Программа просит `input()`, а строки в поле «Ввод» закончились. Допиши их туда, по одной на строку.'],
   [/^FileNotFoundError$/, () => 'Такого файла нет. Имя файла пишется точно как в условии, вместе с `.txt`.'],
   [/^RecursionError$/, () => 'Функция вызывает себя без остановки. Проверь условие выхода из рекурсии.'],
-  [/^ModuleNotFoundError$/, () => 'Такой библиотеки здесь нет. Для ЕГЭ хватает встроенных: `itertools`, `math`, `ipaddress`, `functools`.'],
+  [/^ModuleNotFoundError$/, (_m, msg) => {
+    const name = msg.match(/No module named '([^']+)'/)?.[1] ?? '';
+    const sug = closest(name);
+    return sug && sug !== name
+      ? `Нет модуля «${name}». Похоже на опечатку: нужен «${sug}».`
+      : 'Такой библиотеки здесь нет. Для ЕГЭ хватает встроенных: `itertools`, `math`, `ipaddress`, `functools`, `re`, `turtle`.';
+  }],
   [/^KeyboardInterrupt$/, () => 'Программу остановили.'],
 ];
 

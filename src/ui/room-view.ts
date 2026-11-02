@@ -2,11 +2,12 @@
 // Раскладка B «Карточка с доски» (выбор Дениса по витрине UI.1).
 import { Room, type RunState, type Peer } from '../room/room';
 import { CodeEditor } from '../editor/editor';
-import { FREE_TASK, findTask, type Lesson, type LessonIndexItem, type LessonTask } from '../lessons/types';
+import { FREE_TASK, findTask, type Lesson, type LessonGroup, type LessonIndexItem, type LessonTask } from '../lessons/types';
 import { renderStatement } from './markdown';
 import { ic } from './icons';
 import { h, esc, toast } from './dom';
 import { sharePanel } from './entry-view';
+import { turtleFigure, openTurtleFull } from './turtle-view';
 
 const FONT_KEY = 'coderoom-font';
 const readFont = () => { try { return Number(localStorage.getItem(FONT_KEY)) || 20; } catch { return 20; } };
@@ -82,6 +83,7 @@ export class RoomView {
     r.onMeta(() => { void this.syncFromMeta(); });
     r.doc.getMap('ran').observe(() => this.renderTask());
     r.opened.observe(() => { if (!r.teacher) this.renderTask(); });
+    r.issued.observe(() => this.renderTask());
     await this.syncFromMeta(true);
     // тик для «идёт 3 с»
     this.tick = self.setInterval(() => { if (r.run?.status === 'running') this.renderRun(r.run); }, 500);
@@ -138,8 +140,11 @@ export class RoomView {
 
   /** Ученик видит только открытые задачи и текущую; преподаватель — все (ST.2) */
   private visible(t: LessonTask) {
-    return this.room.teacher || t.id === this.task.id || !!this.room.opened.get(this.key(t));
+    return this.room.teacher || t.id === this.task.id || !!this.room.opened.get(this.key(t)) || this.isIssued(this.groupOf(t));
   }
+  private groupKey(g: LessonGroup) { return `${this.lesson?.id ?? '-'}:${g.id}`; }
+  private isHome(g?: LessonGroup) { return !!g && g.id.startsWith('home'); }
+  private isIssued(g?: LessonGroup) { return !!g && this.isHome(g) && !!this.room.issued.get(this.groupKey(g)); }
   private visibleFlat() { return this.flat.filter((t) => this.visible(t)); }
 
   // ── «Пригласить»: ссылка и PIN в любой момент (ST.1) ──
@@ -205,7 +210,10 @@ export class RoomView {
     const chips = (ts: LessonTask[]) => ts.filter((x) => this.visible(x)).map((x) =>
       `<button class="chip ${x.id === t.id ? 'on' : ''} ${ran.get(key(x)) ? 'ran' : ''}" data-task="${x.id}" title="${esc(x.label)}">${esc(short(x))}</button>`).join('');
     const list = this.listOpen ? `<div class="tasklist" role="dialog" aria-label="Все задачи занятия">
-        ${(this.lesson?.groups ?? []).filter((gr) => gr.tasks.some((x) => this.visible(x))).map((gr) => `<h4>${esc(gr.title)}</h4><div class="grid">${chips(gr.tasks)}</div>`).join('')}
+        ${(this.lesson?.groups ?? []).filter((gr) => gr.tasks.some((x) => this.visible(x))).map((gr) => `<div class="grouphead"><h4>${esc(gr.title)}</h4>${
+          this.room.teacher && this.isHome(gr)
+            ? `<button class="btn ghost issuebtn ${this.isIssued(gr) ? 'on' : ''}" data-issue="${esc(gr.id)}" aria-pressed="${this.isIssued(gr)}">${this.isIssued(gr) ? 'Выдана ученику' : 'Выдать ученику'}</button>`
+            : ''}</div><div class="grid">${chips(gr.tasks)}</div>`).join('')}
         <h4>Без условия</h4><div class="grid"><button class="chip ${t.id === 'free' ? 'on' : ''}" data-task="free">Чистый лист</button></div>
       </div>` : '';
     const lvl = t.level ? ['', 'База', 'Норма', 'Вызов', 'Повышенный'][t.level] ?? '' : '';
@@ -213,10 +221,11 @@ export class RoomView {
     this.els.task.innerHTML = `
       <div class="stacktitle tasknav">
         <span class="label">${esc(g?.title ?? 'Свободный лист')}</span>
-        <button class="btn ghost" data-act="list" aria-expanded="${this.listOpen}" aria-haspopup="dialog">${ic.list}<span>${this.room.teacher ? 'Все стопки' : 'Открытые задачи'}</span></button>
+        <button class="btn ghost" data-act="list" aria-expanded="${this.listOpen}" aria-haspopup="dialog">${ic.list}<span>${this.room.teacher ? 'Все стопки' : 'Мои задачи'}</span></button>
         ${list}
       </div>
       ${g ? `<div class="stack" role="toolbar" aria-label="Задачи стопки">${chips(g.tasks)}</div>` : ''}
+      ${this.homeworkButton(g)}
       <article class="card">
         <div class="cardtop"><span class="badge">${esc(t.label)}</span><span class="lvl">${esc(meta)}</span></div>
         <div class="cardbody">
@@ -230,6 +239,15 @@ export class RoomView {
           <button class="btn" data-task="${next?.id ?? ''}" ${next ? '' : 'disabled'}><span>${next ? esc(next.label) : this.room.teacher ? 'Конец' : 'Пока всё'}</span>${ic.right}</button>
         </div>
       </article>`;
+  }
+
+  /** У ученика: выданная домашка — кнопкой рядом со стопкой, пока он не в ней */
+  private homeworkButton(cur?: LessonGroup) {
+    if (this.room.teacher) return '';
+    const hw = (this.lesson?.groups ?? []).filter((gr) => this.isIssued(gr));
+    const n = hw.reduce((a, gr) => a + gr.tasks.length, 0);
+    if (!n || (cur && this.isHome(cur))) return '';
+    return `<button class="homebtn" data-task="${esc(hw[0].tasks[0].id)}"><b>Домашка</b><span>${n} ${n % 10 === 1 && n % 100 !== 11 ? 'задача' : n % 10 >= 2 && n % 10 <= 4 && (n % 100 < 12 || n % 100 > 14) ? 'задачи' : 'задач'}</span>${ic.right}</button>`;
   }
 
   private renderLegend() {
@@ -268,9 +286,10 @@ export class RoomView {
     st.className = `status ${mine.status}`; st.innerHTML = `<i></i>${label}`;
     const dur = mine.status === 'running' ? secs(Date.now() - mine.at) : mine.ms != null ? secs(mine.ms) : '';
     info.textContent = `Запустил ${mine.name}${dur ? ' · ' + dur : ''}`;
-    let html = mine.cut ? '<span class="cut">Начало вывода обрезано: показываю последние строки.</span>' : '';
+    let html = mine.draw ? turtleFigure(mine.draw) : '';
+    html += mine.cut ? '<span class="cut">Начало вывода обрезано: показываю последние строки.</span>' : '';
     html += esc(mine.out || '');
-    if (!mine.out && mine.status === 'done') html += '<span class="empty">Программа ничего не напечатала. Чтобы увидеть результат, нужен print(…).</span>';
+    if (!mine.out && !mine.draw && mine.status === 'done') html += '<span class="empty">Программа ничего не напечатала. Чтобы увидеть результат, нужен print(…).</span>';
     if (mine.status === 'running' && !mine.out && this.room.runner.state === 'loading') html += '<span class="empty">Python загружается, первый раз это занимает несколько секунд…</span>';
     if (mine.error) {
       const e = mine.error;
@@ -278,8 +297,11 @@ export class RoomView {
     }
     if (mine.status === 'stopped') html += `<div class="err"><span class="t">Программу остановили</span><span class="h">Если она шла слишком долго, проверь условие цикла: может, он не заканчивается.</span></div>`;
     const atBottom = out.scrollHeight - out.scrollTop - out.clientHeight < 40;
+    const prevTop = out.scrollTop;
     out.innerHTML = html;
-    if (atBottom) out.scrollTop = out.scrollHeight;
+    // с рисунком Черепахи начало вывода важнее хвоста: не уезжаем вниз
+    if (mine.draw) out.scrollTop = mine.status === 'running' ? prevTop : Math.min(prevTop, 0);
+    else if (atBottom) out.scrollTop = out.scrollHeight;
   }
 
   private run() {
@@ -288,8 +310,14 @@ export class RoomView {
   }
 
   private onClick(e: MouseEvent) {
-    const el = (e.target as HTMLElement).closest<HTMLElement>('[data-act],[data-task],[data-lesson]');
+    const el = (e.target as HTMLElement).closest<HTMLElement>('[data-act],[data-task],[data-lesson],[data-issue]');
     if (!el || (el as HTMLButtonElement).disabled) return;
+    if (el.dataset.issue !== undefined) {
+      const gr = this.lesson?.groups.find((x) => x.id === el.dataset.issue);
+      if (gr) { const k = this.groupKey(gr); if (this.room.issued.get(k)) this.room.issued.delete(k); else this.room.issued.set(k, true); }
+      e.stopPropagation();
+      return;
+    }
     if (el.dataset.lesson !== undefined) { void this.openLesson(el.dataset.lesson); return; }
     if (el.dataset.task !== undefined) {
       const t = el.dataset.task === 'free' ? FREE_TASK : this.flat.find((x) => x.id === el.dataset.task && this.visible(x));
@@ -300,6 +328,7 @@ export class RoomView {
       case 'run': this.run(); break;
       case 'stop': this.room.stop(); break;
       case 'reset': this.room.resetTask(this.task, this.lesson?.id ?? null); this.editor.focus(); break;
+      case 'turtle-full': if (this.room.run?.draw) openTurtleFull(this.room.run.draw); break;
       case 'invite': if (this.inviteEl) this.closeInvite(); else this.openInvite(); e.stopPropagation(); break;
       case 'lessons': this.lessonMenu = this.lessonMenu ? '' : 'menu'; this.renderLessonNav(); e.stopPropagation(); break;
       case 'erase-ask': this.lessonMenu = 'confirm'; this.renderLessonNav(); e.stopPropagation(); break;

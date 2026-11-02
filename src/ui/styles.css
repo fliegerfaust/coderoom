@@ -256,3 +256,32 @@ input, textarea { font: inherit; color: inherit; }
 .invitebtn svg { width: 16px; height: 16px; }
 .invitebtn[aria-expanded="true"] { background: var(--ground); color: var(--ink); }
 @media (max-width: 1100px) { .invitebtn span { display: none; } .invitebtn { width: 40px; padding: 0; } }
+
+/* Черепаха (№6): рисунок в окне вывода и во весь экран (PY.7) */
+.turtle { margin: 0 0 12px; display: grid; gap: 6px; font-family: var(--f-ui); white-space: normal; }
+.tt-box { background: var(--paper); border: 1px solid var(--line); border-radius: 10px; height: clamp(180px, 26vh, 320px); overflow: hidden; }
+.tt-svg { width: 100%; height: 100%; display: block; }
+.tt-axis { stroke: var(--line); stroke-width: 1; fill: none; }
+.tt-head { fill: var(--violet); }
+.turtle figcaption { display: flex; align-items: center; justify-content: space-between; gap: 8px; font-size: 13px; font-weight: 600; color: var(--ink-3); }
+.turtle figcaption .btn { height: 32px; }
+.tt-full { position: fixed; inset: 0; z-index: 60; background: var(--ground); display: grid; grid-template-rows: auto minmax(0, 1fr);
+  padding: max(12px, env(safe-area-inset-top, 0px)) max(16px, env(safe-area-inset-right, 0px)) max(16px, env(safe-area-inset-bottom, 0px)) max(16px, env(safe-area-inset-left, 0px)); gap: 12px; }
+.tt-full-bar { display: flex; align-items: center; gap: 10px; flex-wrap: wrap; }
+.tt-full-bar b { font-size: 17px; font-weight: 800; }
+.tt-full-bar span:not(.sp) { font-size: 13px; color: var(--ink-3); font-weight: 600; }
+.tt-full-box { background: var(--paper); border: 1px solid var(--line); border-radius: 14px; overflow: hidden; cursor: grab; touch-action: none; }
+.tt-full-box:active { cursor: grabbing; }
+
+/* Домашка: выдать ученику (HW.1) */
+.grouphead { display: flex; align-items: center; justify-content: space-between; gap: 8px; padding-right: 4px; }
+.grouphead h4 { margin-bottom: 4px; }
+.issuebtn { height: 30px; padding: 0 10px; font-size: 13px; }
+.issuebtn.on { color: var(--student); background: var(--student-soft); }
+.issuebtn.on::before { content: ""; width: 6px; height: 6px; border-radius: 50%; background: var(--student); }
+.homebtn { display: flex; align-items: center; gap: 10px; width: 100%; text-align: left; border: 1px solid var(--line); background: var(--paper);
+  border-radius: 12px; padding: 10px 14px; font: 600 14px var(--f-ui); color: var(--ink-2); }
+.homebtn b { font-weight: 800; color: var(--ink); background: linear-gradient(transparent 62%, var(--lime) 62%, var(--lime) 92%, transparent 92%); }
+.homebtn span { flex: 1; }
+.homebtn svg { width: 16px; height: 16px; }
+.homebtn:hover { border-color: color-mix(in srgb, var(--ink) 25%, var(--line)); }
