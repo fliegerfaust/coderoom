@@ -33,10 +33,10 @@ test('преподаватель создаёт комнату, ученик в�
   await expect(t.locator('.peer', { hasText: 'Аршак' })).toBeVisible();
   await expect(s.locator('.peer', { hasText: 'Денис' })).toBeVisible();
 
-  // учитель переходит к №10 · Б4 — у ученика открывается та же задача
+  // учитель переходит к №13 · Б4 — у ученика открывается та же задача
   await t.getByRole('button', { name: 'Все стопки' }).click();
   await t.locator('.tasklist [data-task="c-e10-b4"]').click();
-  await expect(s.locator('.badge')).toHaveText('№10 · Б4');
+  await expect(s.locator('.badge')).toHaveText('№13 · Б4');
 
   // пишут оба
   await typeCode(s, '\nprint(200 & 224)');
@@ -180,7 +180,7 @@ test('ученик видит только открытые задачи; «Пр
   await expect(s.locator('.stack .chip')).toHaveCount(2);
   await s.getByRole('button', { name: 'Мои задачи' }).click();
   await expect(s.locator('.tasklist .chip')).toHaveCount(3); // А1·1, А1·3 и «Чистый лист»
-  await expect(s.locator('.tasklist')).not.toContainText('№10');
+  await expect(s.locator('.tasklist')).not.toContainText('№13');
   await s.keyboard.press('Escape');
 
   // ученик может вернуться к уже открытой задаче

@@ -55,12 +55,14 @@ def ref_label(ref):
     return REF.get(head, head.upper()) + num
 
 
-def ege_task(t, prefix, head, img_src, img_dst, files_src):
+def ege_task(t, prefix, head, img_src, img_dst, files_src, id_ege=None):
+    """id_ege — номер ЕГЭ в id задачи, если он отличается от нынешнего. Прогресс в комнате хранится по ключу
+    «занятие:id задачи», поэтому id после выпуска не меняем никогда (перенумерация №10 → №13, 15.11.2026)."""
     st = t["st"]
     intro = None
     if head and st.startswith(head):
         intro, st = head.strip(), st[len(head):].strip()
-    task = {"id": "%s-e%s-%s" % (prefix, t["ege"], t["ref"]), "label": "№%s · %s" % (t["ege"], ref_label(t["ref"])),
+    task = {"id": "%s-e%s-%s" % (prefix, id_ege or t["ege"], t["ref"]), "label": "№%s · %s" % (t["ege"], ref_label(t["ref"])),
             "kind": "ege", "ege": str(t["ege"]), "topic": t["topic"], "level": t["lvl"], "statement": st,
             "starter": EGE_STARTER.format(ege=t["ege"])}
     if intro:
@@ -93,14 +95,14 @@ def lesson_01(inf, out):
     groups = [
         {"id": "class-py", "title": "На занятии · Python А1",
          "tasks": [atom_task("А1", i + 1, t, "c") for i, t in enumerate(a1["tasks"])]},
-        {"id": "class-ege", "title": "На занятии · ЕГЭ №10",
-         "tasks": [ege_task(t, "c", head, img_src, img_dst, l00) for t in cls]},
+        {"id": "class-ege", "title": "На занятии · ЕГЭ №13",
+         "tasks": [ege_task(t, "c", head, img_src, img_dst, l00, id_ege="10") for t in cls]},
         {"id": "home-py", "title": "Дома · Python А1",
          "tasks": [atom_task("А1", i + 1, t, "h") for i, t in enumerate(atoms.HW["А1"])]},
-        {"id": "home-ege", "title": "Дома · ЕГЭ №10",
-         "tasks": [ege_task(t, "h", head, img_src, img_dst, l00) for t in TP.HW_L01]},
+        {"id": "home-ege", "title": "Дома · ЕГЭ №13",
+         "tasks": [ege_task(t, "h", head, img_src, img_dst, l00, id_ege="10") for t in TP.HW_L01]},
     ]
-    return {"id": "01", "short": "Занятие 01", "title": "Занятие 01 · А1 Переменные и арифметика + №10 «Твой роутер»",
+    return {"id": "01", "short": "Занятие 01", "title": "Занятие 01 · А1 Переменные и арифметика + №13 «Твой роутер»",
             "groups": groups}
 
 
