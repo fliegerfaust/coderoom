@@ -5,7 +5,7 @@ export type TaskKind = 'predict' | 'bug' | 'make' | 'ege' | 'free';
 export interface LessonTask {
   /** Уникален внутри занятия: «a1-3», «e10-b4» */
   id: string;
-  /** Короткая метка на списке: «А1 · 3», «№10 · Б4» */
+  /** Короткая метка на списке: «А1 · 3», «№13 · Б4» */
   label: string;
   kind: TaskKind;
   /** «Предскажи вывод», «Маска · адрес сети» */
@@ -28,7 +28,7 @@ export interface LessonGroup { id: string; title: string; tasks: LessonTask[] }
 
 export interface Lesson {
   id: string;            // «01»
-  title: string;         // «Занятие 01 · А1 Переменные, print и арифметика + №10»
+  title: string;         // «Занятие 01 · А1 Переменные, print и арифметика + №13»
   short: string;         // «Занятие 01»
   groups: LessonGroup[];
 }
