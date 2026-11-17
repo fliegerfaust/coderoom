@@ -162,7 +162,10 @@ export class Room {
     const stdin = this.stdin(key).toString();
     this.outBuf = ''; this.outCut = false;
     let draw: TurtleDraw | null = null;
-    const id = this.runner.run(code, stdin, task.files ?? [], {
+    // url файлов в JSON занятий относительные («lessons/files/…») — резолвим от страницы:
+    // воркер взял бы их от своего скрипта (assets) и поймал бы 404 вместо файла
+    const files = (task.files ?? []).map((f) => ({ ...f, url: new URL(f.url, location.href).href }));
+    const id = this.runner.run(code, stdin, files, {
       onOut: (s) => {
         this.outBuf += s;
         if (this.outBuf.length > OUT_LIMIT) { this.outBuf = this.outBuf.slice(-OUT_LIMIT); this.outCut = true; }

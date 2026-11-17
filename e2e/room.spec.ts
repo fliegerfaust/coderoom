@@ -298,3 +298,28 @@ test('подсказки параметров у обоих, автодопол�
   await s.locator('.cm-line', { hasText: 'range(1, 10)' }).getByText('range').hover();
   await expect(s.locator('.cm-tooltip-hover .cm-pyhint')).toContainText('Последовательность целых чисел');
 });
+
+test('задача с файлом: №10 занятия 07 открывает и читает text-10-a.txt в Python', async ({ context }) => {
+  const t = await context.newPage();
+  await t.goto('./?db=local');
+  await t.getByLabel('Твоё имя в комнате').fill('Денис');
+  await t.getByRole('button', { name: 'Создать комнату' }).click();
+  await t.getByRole('button', { name: 'Готово' }).click();
+
+  // занятие 07 · №10 Б1 — у задачи файл текста
+  await t.locator('.lessonbtn').click();
+  await t.locator('[data-lesson="07"]').click();
+  await t.getByRole('button', { name: 'Все стопки' }).click();
+  await t.locator('.tasklist [data-task="c-e10-b1"]').click();
+  await expect(t.locator('.badge')).toHaveText('№10 · Б1');
+  const file = t.locator('.files a', { hasText: 'text-10-a.txt' });
+  await expect(file).toBeVisible();
+  await expect(file).toHaveAttribute('href', /lessons\/files\/text-10-a\.txt$/);
+
+  // файл монтируется в файловую систему Python: считаем «собак» (включая «собака»)
+  await t.locator('.cm-content').click();
+  await t.keyboard.press('ControlOrMeta+End');
+  await t.keyboard.type("\nprint(open('text-10-a.txt').read().lower().count('собак'))");
+  await t.keyboard.press('ControlOrMeta+Enter');
+  await expect(t.locator('.outbody')).toContainText('14', { timeout: 60_000 });
+});
