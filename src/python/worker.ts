@@ -50,6 +50,25 @@ builtins.input = input
   post({ t: 'ready', ms: Math.round(performance.now() - t0) });
 }
 
+/** Файл задачи качается с тем же сайтом; на медленной сети fetch может висеть вечно — режем по таймауту,
+ *  чтобы вместо молчаливого «Идёт» ученик видел понятную ошибку. */
+const FILE_TIMEOUT_MS = 15_000;
+
+async function fetchFile(f: { name: string; url: string }): Promise<Uint8Array> {
+  const ac = new AbortController();
+  const timer = setTimeout(() => ac.abort(), FILE_TIMEOUT_MS);
+  try {
+    const r = await fetch(f.url, { signal: ac.signal });
+    if (!r.ok) throw new Error(`HTTP ${r.status}`);
+    return new Uint8Array(await r.arrayBuffer());
+  } catch (e) {
+    const why = (e as Error)?.name === 'AbortError' ? `не скачался за ${FILE_TIMEOUT_MS / 1000} с` : String((e as Error)?.message ?? e);
+    throw new Error(`FileTaskError: файл задачи ${f.name} ${why}. Проверь интернет и нажми «Запустить» ещё раз.`);
+  } finally {
+    clearTimeout(timer);
+  }
+}
+
 async function run(m: Extract<ToWorker, { t: 'run' }>) {
   await ready;
   current = m.id;
@@ -57,8 +76,7 @@ async function run(m: Extract<ToWorker, { t: 'run' }>) {
   const t0 = performance.now();
   try {
     for (const f of m.files) {
-      const buf = new Uint8Array(await (await fetch(f.url)).arrayBuffer());
-      py.FS.writeFile(f.name, buf);
+      py.FS.writeFile(f.name, await fetchFile(f));
     }
     py.FS.writeFile(PROGRAM_FILE, new TextEncoder().encode(m.code));
     py.runPython("import sys; sys.modules['turtle']._reset()");

@@ -38,6 +38,8 @@ function lev(a: string, b: string) {
 }
 
 const HINTS: Array<[RegExp, (m: RegExpMatchArray, msg: string) => string]> = [
+  [/^FileTaskError$/, () =>
+    'Текст задачи не скачался с сайта: интернет медленный или файл недоступен. Проверь сеть и нажми «Запустить» ещё раз.'],
   [/^NameError$/, (_m, msg) => {
     const name = msg.match(/name '(.+?)' is not defined/)?.[1];
     const sug = didYouMean(msg);

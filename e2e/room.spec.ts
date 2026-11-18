@@ -323,3 +323,23 @@ test('задача с файлом: №10 занятия 07 открывает �
   await t.keyboard.press('ControlOrMeta+Enter');
   await expect(t.locator('.outbody')).toContainText('14', { timeout: 60_000 });
 });
+
+test('файл задачи не скачался — понятная ошибка вместо вечного «Идёт»', async ({ context }) => {
+  const t = await context.newPage();
+  await t.route('**/lessons/files/text-10-a.txt', (r) => r.abort());
+  await t.goto('./?db=local');
+  await t.getByLabel('Твоё имя в комнате').fill('Денис');
+  await t.getByRole('button', { name: 'Создать комнату' }).click();
+  await t.getByRole('button', { name: 'Готово' }).click();
+  await t.locator('.lessonbtn').click();
+  await t.locator('[data-lesson="07"]').click();
+  await t.getByRole('button', { name: 'Все стопки' }).click();
+  await t.locator('.tasklist [data-task="c-e10-b1"]').click();
+  await t.locator('.cm-content').click();
+  await t.keyboard.press('ControlOrMeta+End');
+  await t.keyboard.type("\nprint(open('text-10-a.txt').read())");
+  await t.keyboard.press('ControlOrMeta+Enter');
+  await expect(t.locator('.err .t')).toContainText('FileTaskError', { timeout: 60_000 });
+  await expect(t.locator('.err .h')).toContainText('не скачался');
+  await expect(t.locator('.status')).toContainText('Ошибка');
+});
