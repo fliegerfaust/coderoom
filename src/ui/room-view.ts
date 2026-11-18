@@ -295,7 +295,7 @@ export class RoomView {
     html += mine.cut ? '<span class="cut">Начало вывода обрезано: показываю последние строки.</span>' : '';
     html += esc(mine.out || '');
     if (!mine.out && !mine.draw && mine.status === 'done') html += '<span class="empty">Программа ничего не напечатала. Чтобы увидеть результат, нужен print(…).</span>';
-    if (mine.status === 'running' && !mine.out && this.room.runner.state === 'loading') html += '<span class="empty">Python загружается, первый раз это занимает несколько секунд…</span>';
+    if (mine.status === 'running' && !mine.out && this.room.runner.state === 'loading') html += '<span class="empty">Python загружается — около 7 МБ, при медленном интернете это пара минут. Программа запустится сама; «Стоп» не жми: остановка начнёт загрузку заново.</span>';
     if (mine.error) {
       const e = mine.error;
       html += `<div class="err"><span class="t">${esc(e.type)}${e.line ? ` · строка ${e.line}` : ''}</span><span class="h">${inlineCode(esc(e.hint))}</span><pre>${esc(e.traceback)}</pre></div>`;
